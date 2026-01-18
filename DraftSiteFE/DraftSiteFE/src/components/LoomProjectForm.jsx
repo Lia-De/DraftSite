@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { defaultYarn } from "../constants/yarnConstants";
+import { defaultYarn, USAGE_TYPES, FIBRE_TYPES } from "../constants/yarnConstants";
 
 export default function LoomProjectForm({ onSubmit }) {
   const { register, control, handleSubmit, formState: { errors } } = useForm({
@@ -40,12 +40,12 @@ export default function LoomProjectForm({ onSubmit }) {
   const { fields: chainFields, append: appendChain, remove: removeChain } = useFieldArray({ control, name: "warpChains" });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="create-form">
       <h2>Create Loom Project</h2>
 
       <label>
         Name
-        <input {...register("name")} />
+        <input {...register("name", {required: true})} />
       </label>
 
       <label>
@@ -109,6 +109,10 @@ export default function LoomProjectForm({ onSubmit }) {
               <input {...register(`yarns.${index}.color`)} />
             </label>
             <label>
+              Color code
+              <input {...register(`yarns.${index}.colorCode`)} />
+            </label>
+            <label>
               Ply
               <input type="number" {...register(`yarns.${index}.ply`, { valueAsNumber: true })} />
             </label>
@@ -121,6 +125,36 @@ export default function LoomProjectForm({ onSubmit }) {
               <input type="number" {...register(`yarns.${index}.lengthPerSkeinMeters`, { valueAsNumber: true })} />
             </label>
             <label>
+            Fibre type
+            <select
+                {...register(`yarns.${index}.fibreType`, {
+                valueAsNumber: true
+                })}
+            >
+                <option value="">Select fibre</option>
+                {FIBRE_TYPES.map(opt => (
+                <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                </option>
+                ))}
+            </select>
+            </label>
+            <label>
+            Usage type
+            <select
+                {...register(`yarns.${index}.usageType`, {
+                valueAsNumber: true
+                })}
+            >
+                <option value="">Select usage</option>
+                {USAGE_TYPES.map(opt => (
+                <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                </option>
+                ))}
+            </select>
+            </label>
+            <label>
               Notes
               <input {...register(`yarns.${index}.notes`)} />
             </label>
@@ -128,25 +162,7 @@ export default function LoomProjectForm({ onSubmit }) {
           </div>
         ))}
         <button type="button" onClick={() =>
-          appendYarn({
-            id: "",
-            loomProjectId: "",
-            usageType: 0,
-            brand: "",
-            color: "",
-            colorCode: "",
-            dyeLot: "",
-            fibreType: 0,
-            ply: "",
-            thicknessNM: "",
-            notes: "",
-            weightPerSkeinGrams: null,
-            lengthPerSkeinMeters: null,
-            numberOfSkeins: null,
-            pricePerSkein: null,
-            totalWeightGrams: null,
-            totalLengthMeters: null,
-            totalPrice: null
+          appendYarn({...defaultYarn
           })
         }>Add Yarn</button>
       </div>
