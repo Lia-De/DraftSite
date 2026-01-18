@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { YARN_FIBRE_LABELS, YARN_USAGE_LABELS } from "../constants/yarnConstants.js";
 
 export default function YarnInfoShort({ yarn }) {
+  const [showInfo, setShowInfo] = useState(false);
     return (
         <>
         <p>{yarn.brand}</p>

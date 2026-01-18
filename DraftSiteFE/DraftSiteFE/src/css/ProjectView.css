@@ -110,14 +110,40 @@
  }
 
 .btn-warping-toggle, .btn-warping-toggle-inactive {
- padding: 4px 8px;
- border: 1px solid #000;
- cursor: pointer;
- margin-bottom: auto;
- background: #fff;
+    padding: 4px 8px;
+    border: 1px solid #000;
+    cursor: pointer;
+    margin-bottom: auto;
+    background: #fff;
+    box-shadow: unset;
 }
 .btn-warping-toggle-inactive {
     background: #000;
     color: #fff;
     margin-bottom: auto;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+#update-metrics {
+    grid-column: 1 / span 4;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.update-metrics-grid input[type=submit] {
+    margin-top: 0.3em;
+    margin-left: 0.3rem;
+    border-radius: 0.5rem;
+    line-height: 1.5rem;
+    border-width: 1px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.update-input {
+    width: 3rem;
+    height: 1.5rem;
+    margin: 0 auto;
+}
+
+.error {
+    font-size: 0.8rem;
+    color: red;
 }

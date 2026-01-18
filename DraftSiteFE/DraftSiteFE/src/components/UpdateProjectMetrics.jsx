@@ -1,0 +1,84 @@
+import { useForm } from "react-hook-form";
+import { update } from "../services/APICalls";
+import { useEffect, useState } from "react";
+
+export default function UpdateProjectMetrics ({project, setUiState}) {
+    const [updatedProject, setUpdatedProject] = useState({});
+   
+    function MetricForm({ label, fieldName, projectId, onSubmit }) {
+        const { register, handleSubmit, reset,  formState: { errors } } = useForm();
+
+        const submit = (data) => {
+            onSubmit({
+            projectId,
+            [fieldName]: data[fieldName],
+            });
+            reset();
+        };
+
+        return (
+            <div className="update-metrics-grid">
+            <form onSubmit={handleSubmit(submit)}>
+                <input
+                type="number"
+                className="update-input"
+                {...register(fieldName, {min: {value: 1, message: "Måste vara positivt"}})}
+                />
+                <input type="submit" value={label} />
+                
+                {errors[fieldName] && (
+                <p className="error">
+                    {errors[fieldName].message}
+                </p>
+                )}
+            </form>
+            </div>
+        );
+    }
+    const handleMetricSubmit = async (payload) => {
+        
+        try {
+            const result = await update('Projects/parameters', payload);
+        } catch (err) {
+            console.error(`Error fetching ${fetchCategory} data:`, err);
+            setUiState(prevState => ({...prevState, loadingError: err.message || "Unknown error"}));
+        }  
+        finally {
+            setUiState(prevState => ({...prevState, isLoading: false}));
+            setUiState(prev => ({...prev, forceReload: true}))
+        }
+    
+    };
+
+    return (
+    <>
+        <MetricForm
+        label="Bredd"
+        fieldName="weavingWidthCm"
+        projectId={project.id}
+        onSubmit={handleMetricSubmit}
+        />
+
+        <MetricForm
+        label="EPC"
+        fieldName="endsPerCm"
+        projectId={project.id}
+        onSubmit={handleMetricSubmit}
+        />
+
+        <MetricForm
+        label="Längd"
+        fieldName="warpLengthMeters"
+        projectId={project.id}
+        onSubmit={handleMetricSubmit}
+        />
+
+        <MetricForm
+        label="Trådar"
+        fieldName="inputEndsInWarp"
+        projectId={project.id}
+        onSubmit={handleMetricSubmit}
+        />
+    </>
+    );
+}

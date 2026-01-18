@@ -9,6 +9,8 @@ import EndsBoxes from "../components/WarpingEndsBoxes.jsx";
 import ProjectMeta from "../components/ProjectMeta.jsx";
 import YarnInfoShort from "../components/YarnInfoShort.jsx";
 import ShowYarnList from "../components/ShowYarnList.jsx";
+import UpdateProjectMetrics from "../components/UpdateProjectMetrics.jsx";
+
 
 export default function ProjectView() {
     const { projectId } = useParams();
@@ -56,42 +58,50 @@ export default function ProjectView() {
         isLoading: false,
         loadingError: null,
         showMeta: false,
+        forceReload: false,
     });
     
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const projectList = useAtomValue(projectListAtom);
 
+    const fetchProjectById = async () => {
+      setUiState(prevState => ({...prevState, isLoading: true}));
+      try {
+          const response =  await axios.get(`${API_BASE_URL}/projects/${projectId}`);
+          setProject(response.data);
+
+            // Fetch warp yarn details, first one with the type Warp (0)
+            const warpYarn = response.data.yarns.find(
+            (yarn) => yarn.usageType === 0
+          );
+          if (warpYarn) {
+            setWarp(warpYarn);
+          }
+          // Fetch weft yarn details, first one with the type Weft (1)
+          const weftYarn = response.data.yarns.find(
+            (yarn) => yarn.usageType === 1
+          );
+          setWeft(weftYarn ? weftYarn : warpYarn);
+          
+          
+      } catch (error) {
+          console.error("Error fetching project:", error);
+      } finally {
+          setUiState(prevState => ({...prevState, isLoading: false}));
+      }
+    }
+
+    useEffect(() => {
+      if (uiState.forceReload == true) {
+        fetchProjectById(projectId);
+        setUiState(prev => ({...prev, forceReload: false}))
+      }
+    }, [uiState.forceReload]);
+
     useEffect(() => {
         if (projectList && projectId) {
             const foundProject = projectList.find(p => p.id.toString() === projectId.toString());
             setProject(foundProject || null);
-
-            const fetchProjectById = async () => {
-            setUiState(prevState => ({...prevState, isLoading: true}));
-            try {
-                const response =  await axios.get(`${API_BASE_URL}/projects/${projectId}`);
-                setProject(response.data);
-
-                  // Fetch warp yarn details, first one with the type Warp (0)
-                 const warpYarn = response.data.yarns.find(
-                  (yarn) => yarn.usageType === 0
-                );
-                if (warpYarn) {
-                  setWarp(warpYarn);
-                }
-                // Fetch weft yarn details, first one with the type Weft (1)
-                const weftYarn = response.data.yarns.find(
-                  (yarn) => yarn.usageType === 1
-                );
-                setWeft(weftYarn ? weftYarn : warpYarn);
-                
-                
-            } catch (error) {
-                console.error("Error fetching project:", error);
-            } finally {
-                setUiState(prevState => ({...prevState, isLoading: false}));
-            }
-        }
 
         fetchProjectById();
       }
@@ -134,6 +144,8 @@ export default function ProjectView() {
           <p className="opt">{project.warpLengthMeters} </p>
           <p className="opt">{project.totalEndsInWarp}</p>
 
+          <UpdateProjectMetrics project={project} setUiState={setUiState}/>
+
           <p className="span2"></p>
           <p>Åtgång varp (m)</p>
           <p>Åtgång nystan</p>
@@ -164,15 +176,7 @@ export default function ProjectView() {
 
       <ShowYarnList yarnList={project.yarns} />
 
-      {/* {project.yarns.length === 0 ? (
-        <p>Inget garn tillagt</p>
-      ) : (
-        <ul>
-          {project.yarns.map((yarn) => (
-            <YarnInfoShort key={yarn.id} yarn={yarn} />
-          ))}
-        </ul>
-      )} */}
+
     </section>
 
     </div>

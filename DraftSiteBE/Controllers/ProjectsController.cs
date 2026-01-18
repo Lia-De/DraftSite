@@ -182,6 +182,7 @@ namespace DraftSiteBE.Controllers
                 {
                     project.InputEndsInWarp = dto.InputEndsInWarp.Value;
                     project.EndsInput = true;
+                    project.WidthInput = false;
                     anyChange = true;
                 }
             }
@@ -192,6 +193,7 @@ namespace DraftSiteBE.Controllers
                 else
                 {
                     project.EndsPerCm = dto.EndsPerCm.Value;
+                    project.EndsInput = false;
                     anyChange = true;
                 }
             }
@@ -202,6 +204,16 @@ namespace DraftSiteBE.Controllers
                 else
                 {
                     project.PicksPerCm = dto.PicksPerCm.Value;
+                    anyChange = true;
+                }
+            }
+
+            if (dto.WarpLengthMeters.HasValue)
+            {
+                if (dto.WarpLengthMeters.Value <= 0) errors.Add("WarpLengthMeters must be > 0.");
+                else
+                {
+                    project.WarpLengthMeters = dto.WarpLengthMeters.Value;
                     anyChange = true;
                 }
             }

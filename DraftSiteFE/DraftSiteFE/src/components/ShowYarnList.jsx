@@ -5,16 +5,18 @@ import YarnInfoShort from "./YarnInfoShort";
 
 export default function ShowYarnList({yarnList}) {
 
-    return yarnList.length === 0 ? (
-        <p>Inget garn tillagt</p>
-      ) : (
+
+    return (
+      <section>
+        <h3>Garnlista</h3>
         <ul>
           {yarnList.map((yarn) => (
-            <div className="yarn-metrics">
+            <div className="yarn-metrics" key={yarn.id}>
                 <YarnInfoShort key={yarn.id} yarn={yarn} />
             </div>
           ))}
         </ul>
+      </section>
       )
 }
 

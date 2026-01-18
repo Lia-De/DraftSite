@@ -12,5 +12,6 @@ namespace DraftSiteBE.DTOs
         public double? EndsPerCm { get; set; }         // new ends (warp) per cm
         public double? PicksPerCm { get; set; }        // new picks (weft) per cm
         public int? InputEndsInWarp { get; set; }      // new total ends in the warp (if user supplies total ends)
+        public double? WarpLengthMeters { get; set; } // New: allow updating the planned warp length (meters)
     }
 }

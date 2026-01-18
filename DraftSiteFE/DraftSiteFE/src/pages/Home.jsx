@@ -8,8 +8,8 @@ import { MdExpandLess } from "react-icons/md";
 
 import AdminYarnValidationSetting from "../components/AdminYarnValidationSetting.jsx";
 import ShowProjectList from "../components/ShowProjectList.jsx";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { getAll } from "../services/APICalls.js";
+import ShowYarnList from "../components/ShowYarnList.jsx";
 
 export default function Home() {
 
@@ -20,7 +20,8 @@ const [uiState, setUiState] = useState({
     isLoading: false,
     loadingError: null,
     adminView: false,
-    projectListView: false
+    projectListView: false,
+    yarnListView: false,
 });
 const [yarnValidationConstants, setYarnValidationConstants]= useState({
            PlyMin: 1,
@@ -32,6 +33,7 @@ const [yarnValidationConstants, setYarnValidationConstants]= useState({
     const [fetchCategory, setFetchCategory] = useState(null);
     
     const [projectList, setProjectList] = useAtom(projectListAtom);
+    const [yarnList, setYarnList] = useState(null);
 
 
     // When fetchCategory is set - fetch that category of data
@@ -40,18 +42,18 @@ const [yarnValidationConstants, setYarnValidationConstants]= useState({
         const fetchData = async () => {
             setUiState(prevState => ({...prevState, isLoading: true}));
             try {
-                const response =  await axios.get(`${API_BASE_URL}/${fetchCategory}`);
-                // console.log(`Fetched ${fetchCategory} data:`, response.data);
+                const response =  await getAll(fetchCategory)
                 if (fetchCategory === "Yarns") {
                     // Example: process yarn data
-                    const yarns = response.data;
+                    const yarns = response;
+                    setYarnList(yarns);
                     setUiState(prevState => ({
                         ...prevState,
                         yarnCount: yarns.length,
                     }));
                 }
                 if (fetchCategory === "Projects") {
-                    const projects = response.data;
+                    const projects = response;
                     setProjectList(projects);
                     setUiState(prevState => ({
                         ...prevState,
@@ -59,7 +61,7 @@ const [yarnValidationConstants, setYarnValidationConstants]= useState({
                     }));
                 }
                 if (fetchCategory === "WarpChains") {
-                    const warpChains = response.data;
+                    const warpChains = response;
                     setUiState(prevState => ({
                         ...prevState,
                         warpChainCount: warpChains.length,
@@ -67,10 +69,10 @@ const [yarnValidationConstants, setYarnValidationConstants]= useState({
                 }
                 if (fetchCategory === "admin/yarn-validation") {
                     setYarnValidationConstants({
-                        PlyMin: response.data.plyMin,
-                        PlyMax: response.data.plyMax,
-                        ThicknessMin: response.data.thicknessMin,
-                        ThicknessMax: response.data.thicknessMax,
+                        PlyMin: response?.plyMin,
+                        PlyMax: response?.plyMax,
+                        ThicknessMin: response?.thicknessMin,
+                        ThicknessMax: response?.thicknessMax,
                     });
                 }
             } catch (err) {
@@ -82,9 +84,9 @@ const [yarnValidationConstants, setYarnValidationConstants]= useState({
                 setFetchCategory(null);
             }
         }
+
         fetchCategory!==null && fetchData();
 
-        
     }, [fetchCategory]);
 
     useEffect(() => {
@@ -125,12 +127,18 @@ return (
                 {uiState.isLoading && fetchCategory==="WarpChains" ? <RxUpdate /> : ""}
             </button>
         </section>
-        <section>
+        <section>   {/* Buttons to select expanded information */}
             <button className="btn-toggle" 
             onClick={() => setUiState(prev => ({...prev, projectListView: !prev.projectListView}))}>
                 {uiState.projectListView 
                 ? (<> <MdExpandLess />Dölj projektlista </>) 
                 : (<> <MdExpandMore /> Visa projektlista </>)}
+            </button>
+            <button className="btn-toggle"
+                onClick={() => setUiState(prev => ({...prev, yarnListView: !prev.yarnListView}))}>
+                {uiState.yarnListView 
+                ? (<> <MdExpandLess />Dölj Garnlista </>) 
+                : (<> <MdExpandMore /> Visa Garnlista </>)                }
             </button>
 
             <button className="btn-toggle" onClick={() => setUiState(prev => ({...prev, adminView: !prev.adminView}))}>
@@ -139,12 +147,15 @@ return (
             : (<><MdExpandMore /> Visa admin vy</>)}
             </button>
         </section>
+                {/* Display the expanded information checked from the Button section */}
             {projectList && projectList.length>0 && uiState.projectListView  && <ShowProjectList />}
+            {yarnList && yarnList.length>0 && uiState.yarnListView && <ShowYarnList yarnList={yarnList}/>}
             {uiState.adminView && 
-            <AdminYarnValidationSetting 
-            onFetchRequest={onFetchRequest}
-            yarnValidationConstants={yarnValidationConstants}
-            />}
+                <AdminYarnValidationSetting 
+                    onFetchRequest={onFetchRequest}
+                    yarnValidationConstants={yarnValidationConstants}
+                />
+                }
 
     </div>
     );
