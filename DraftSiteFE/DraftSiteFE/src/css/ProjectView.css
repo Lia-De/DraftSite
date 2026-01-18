@@ -1,0 +1,123 @@
+* {
+    box-sizing: border-box;
+    
+    /* margin: 0; */
+    /* padding: 0; */
+}
+
+#project-detail {
+    /* border: 1px solid green; */
+    padding: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    min-width: 600px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative; /* anchor for absolute children project-meta*/
+}
+
+#project-detail h1, 
+#project-detail h2, 
+#project-detail h3, 
+#project-detail h4, 
+#project-detail h5 {
+    grid-column: 1 / span 4;
+    margin-bottom: 0.2rem;
+    font-family: "Tinos", serif;
+    font-weight: 700;
+    font-style: normal;
+    margin-top: 0.2rem;
+}
+#project-detail hr {
+    grid-column: 1 / span 4;
+    border: none;
+    height: 1px;
+    width: 100%;
+    background-color: #929292;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+#project-detail .desc {
+    grid-column: 1 / span 4;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-family: "Tinos", serif;
+    font-weight: 400;
+    font-style: normal;
+    text-align: justify;
+}
+.yarn-metrics, #warp-metrics-grid {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+}  
+.yarn-metrics {
+    grid-template-columns: 1fr 1fr 1fr;
+    border: 1px solid black;
+    margin: 0 0.3rem;
+    position: relative;
+    padding: 24px 16px 16px;
+    margin-top: 16px;
+}
+.yarn-metrics h2 {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 0 8px;
+    background: #fff; /* match page background */
+    font-size: 1.2rem;
+}
+#warp-metrics-grid {
+    grid-column: 1 / span 4;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.yarn-metrics p, #warp-metrics-grid p {
+    margin: 0;
+}
+.span2 {
+    grid-column: span 2;
+    text-align: start;
+}
+#warp-metrics-grid p.opt {
+    border: 1px solid black;
+}
+.yarn-calculations {
+    grid-column: 1 / span 2;
+}
+.yarn-calculations p.span2 {
+    text-align: unset;    
+}
+ .project-meta, .project-meta-link {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 200px;
+    font-size: 0.85rem;
+    color: white;
+    background-color: #797979;
+    border-radius: 1rem 0 1rem 1rem;
+    z-index: 10;
+    padding-bottom: 0.5rem;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+ }
+ .project-meta-link {
+    width: 100px;
+    height: 2rem;
+    text-align: center;
+    line-height: 2rem;
+ }
+
+.btn-warping-toggle, .btn-warping-toggle-inactive {
+ padding: 4px 8px;
+ border: 1px solid #000;
+ cursor: pointer;
+ margin-bottom: auto;
+ background: #fff;
+}
+.btn-warping-toggle-inactive {
+    background: #000;
+    color: #fff;
+    margin-bottom: auto;
+}
