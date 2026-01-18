@@ -2,7 +2,6 @@ import "../css/ProjectView.css";
 import { Link, useParams } from "react-router";
 import React, { useEffect, useState } from "react";
 import { useAtom, useAtomValue } from "jotai";
-import axios from "axios";
 import { projectListAtom } from "../atoms/projectListAtom.js";
 import { RiExpandLeftFill } from "react-icons/ri";
 import EndsBoxes from "../components/WarpingEndsBoxes.jsx";
@@ -11,49 +10,16 @@ import YarnInfoShort from "../components/YarnInfoShort.jsx";
 import ShowYarnList from "../components/ShowYarnList.jsx";
 import UpdateProjectMetrics from "../components/UpdateProjectMetrics.jsx";
 import { MdInfoOutline } from "react-icons/md";
+import { getById } from "../services/APICalls.js";
+import { defaultYarn } from "../constants/yarnConstants.js";
 
 
 export default function ProjectView() {
     const { projectId } = useParams();
     const [project, setProject] = useState(null);
-    const [warp, setWarp] = useState({
-      id: '',
-      usageType: '',
-      brand: '',
-      color: '',
-      colorCode: '',
-      dyeLot: '',
-      fibreType: '',
-      ply: '',
-      thicknessNM: '',
-      notes: '',
-      weightPerSkeinGrams: '',
-      lengthPerSkeinMeters: '',
-      numberOfSkeins: '',
-      pricePerSkein: '',
-      totalWeightGrams: '',
-      totalLengthMeters: '',
-      totalPrice: ''
-    });
-    const [weft, setWeft] = useState({
-      id: '',
-      usageType: '',
-      brand: '',
-      color: '',
-      colorCode: '',
-      dyeLot: '',
-      fibreType: '',
-      ply: '',
-      thicknessNM: '',
-      notes: '',
-      weightPerSkeinGrams: '',
-      lengthPerSkeinMeters: '',
-      numberOfSkeins: '',
-      pricePerSkein: '',
-      totalWeightGrams: '',
-      totalLengthMeters: '',
-      totalPrice: ''
-    });
+
+    const [warp, setWarp] = useState({...defaultYarn});
+    const [weft, setWeft] = useState({...defaultYarn});
     
     const [uiState, setUiState] = useState({
         isLoading: false,
@@ -63,24 +29,24 @@ export default function ProjectView() {
         warpAsWeft: false,
     });
     
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const projectList = useAtomValue(projectListAtom);
 
     const fetchProjectById = async () => {
       setUiState(prevState => ({...prevState, isLoading: true}));
       try {
-          const response =  await axios.get(`${API_BASE_URL}/projects/${projectId}`);
-          setProject(response.data);
-
+          // const response =  await axios.get(`${API_BASE_URL}/projects/${projectId}`);
+          const response = await getById('projects', projectId)
+          
+          setProject(response);
             // Fetch warp yarn details, first one with the type Warp (0)
-            const warpYarn = response.data.yarns.find(
+            const warpYarn = response.yarns.find(
             (yarn) => yarn.usageType === 0
           );
           if (warpYarn) {
             setWarp(warpYarn);
           }
           // Fetch weft yarn details, first one with the type Weft (1)
-          const weftYarn = response.data.yarns.find(
+          const weftYarn = response.yarns.find(
             (yarn) => yarn.usageType === 1
           );
           if (weftYarn) 
@@ -136,9 +102,8 @@ export default function ProjectView() {
       </div>
       
       <div className="yarn-metrics-weft">
-        <h2>Inslagsgarn {uiState.warpAsWeft && (
-            <MdInfoOutline className="icon"  title="Varpgarn används även som inslag" />
-          )}
+        <h2>Inslagsgarn {uiState.warpAsWeft && 
+          (<MdInfoOutline className="icon" title="Varpgarn används även som inslag" />)}
         </h2>
         <YarnInfoShort yarn={weft} />
       </div>

@@ -4,6 +4,7 @@ import Home from './pages/Home.jsx'
 
 import './App.css'
 import ProjectView from './pages/ProjectView.jsx'
+import ProjectCreate from './pages/ProjectCreate.jsx'
 
 function App() {
   
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/detail/:projectId" element={<ProjectView />} />
+        <Route path="create" element={<ProjectCreate />} />
       </Routes>
     </HashRouter>
   )

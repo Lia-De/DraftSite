@@ -27,7 +27,7 @@ a {
 }
 a:hover {
   color: #2d5f5f;
-  text-decoration: underline;
+  text-decoration: none;
 } 
 
 /*  Site Fonts

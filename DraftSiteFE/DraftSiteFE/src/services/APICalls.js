@@ -39,7 +39,7 @@ export const create = async (endpoint, data) => {
     }
 };
 
-// PUT request (Update)
+// PATCH request (Update)
 export const update = async (endpoint, data) => {
     try {
         const response = await fetch(`${API_BASE_URL}/${endpoint}`, {

@@ -90,6 +90,9 @@
   body {
     font-size: 0.8rem;
   }
+  * {
+    box-shadow: none !important;
+  }
   #project-detail {
     position: static !important;
   }

@@ -46,6 +46,8 @@
     font-weight: 400;
     font-style: normal;
     text-align: justify;
+    border: 1px dotted grey;
+    background-color: rgb(241, 241, 241);
 }
 .yarn-metrics,
 .yarn-metrics-warp, 
@@ -113,7 +115,7 @@
     color: white;
     background-color: #797979;
     border-radius: 1rem 0 1rem 1rem;
-    z-index: 10;
+    z-index: 1000;
     padding-bottom: 0.5rem;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
  }

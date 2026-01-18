@@ -5,29 +5,32 @@ import React, { useEffect, useState } from "react";
 import { RxUpdate } from "react-icons/rx";
 import { MdExpandMore } from "react-icons/md";
 import { MdExpandLess } from "react-icons/md";
+import { MdOutlineLibraryAdd } from "react-icons/md";
+import logo from '../assets/weave-svgrepo-com.svg';
 
 import AdminYarnValidationSetting from "../components/AdminYarnValidationSetting.jsx";
 import ShowProjectList from "../components/ShowProjectList.jsx";
 import { getAll } from "../services/APICalls.js";
 import ShowYarnList from "../components/ShowYarnList.jsx";
+import { Link } from "react-router";
 
 export default function Home() {
 
-const [uiState, setUiState] = useState({
-    yarnCount: 0,
-    projectCount: 0,
-    warpChainCount: 0,
-    isLoading: false,
-    loadingError: null,
-    adminView: false,
-    projectListView: false,
-    yarnListView: false,
-});
-const [yarnValidationConstants, setYarnValidationConstants]= useState({
-           PlyMin: 1,
-            PlyMax: 10,
-            ThicknessMin: 5,
-            ThicknessMax: 50,
+    const [uiState, setUiState] = useState({
+        yarnCount: 0,
+        projectCount: 0,
+        warpChainCount: 0,
+        isLoading: false,
+        loadingError: null,
+        adminView: false,
+        projectListView: false,
+        yarnListView: false,
+    });
+    const [yarnValidationConstants, setYarnValidationConstants]= useState({
+        PlyMin: 1,
+        PlyMax: 10,
+        ThicknessMin: 5,
+        ThicknessMax: 50,
     });
     
     const [fetchCategory, setFetchCategory] = useState(null);
@@ -106,7 +109,9 @@ const [yarnValidationConstants, setYarnValidationConstants]= useState({
 
 return (
     <div className="home-container">
-        <h1 className="headerfont-bold">Hämta data</h1>
+        <h1 className="headerfont-bold">
+            Lias <img src={logo} alt="logo" height="36px" /> Vävnota
+            </h1>
         {uiState.loadingError && <p style={{color: 'red'}}>Error: {uiState.loadingError}</p>}
 
         <section>
@@ -126,7 +131,9 @@ return (
                 {uiState.isLoading && fetchCategory==="WarpChains" ? <RxUpdate className="icon"  /> : ""}
             </button>
         </section>
-        <section>   {/* Buttons to select expanded information */}
+ 
+ {/* Buttons to select expanded information */}
+         <section>  
             {projectList && projectList.length>0 && <button className="btn-toggle" 
             onClick={() => setUiState(prev => ({...prev, projectListView: !prev.projectListView}))}>
                 {uiState.projectListView 
@@ -146,15 +153,26 @@ return (
             : (<><MdExpandMore className="icon" /> Visa admin vy</>)}
             </button>
         </section>
-                {/* Display the expanded information checked from the Button section */}
-            {projectList && projectList.length>0 && uiState.projectListView  && <ShowProjectList />}
-            {yarnList && yarnList.length>0 && uiState.yarnListView && <ShowYarnList yarnList={yarnList}/>}
+
+ {/* Adding section */}
+        <section style={{paddingTop:"1rem"}}>
+            <button><Link to="create"><MdOutlineLibraryAdd className="icon"/>Skapa project</Link></button>
+        </section>
+        
+{/* Display the expanded information checked from the Button section */}
+            {projectList && 
+                projectList.length>0 && 
+                uiState.projectListView  && 
+                <ShowProjectList />}
+            {yarnList && 
+                yarnList.length>0 && 
+                uiState.yarnListView && 
+                <ShowYarnList yarnList={yarnList}/>}
             {uiState.adminView && 
                 <AdminYarnValidationSetting 
                     onFetchRequest={onFetchRequest}
                     yarnValidationConstants={yarnValidationConstants}
-                />
-                }
+                />}
 
     </div>
     );

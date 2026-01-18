@@ -14,3 +14,22 @@ export const YARN_USAGE_LABELS = {
     2: 'Supplementär',
     3: 'Övrigt'
 }
+export const defaultYarn = {
+        id: "",
+        usageType: 0,
+        brand: "",
+        color: "",
+        colorCode: "",
+        dyeLot: "",
+        fibreType: 0,
+        ply: "",
+        thicknessNM: "",
+        notes: "",
+        weightPerSkeinGrams: null,
+        lengthPerSkeinMeters: null,
+        numberOfSkeins: null,
+        pricePerSkein: null,
+        totalWeightGrams: null,
+        totalLengthMeters: null,
+        totalPrice: null
+    }
