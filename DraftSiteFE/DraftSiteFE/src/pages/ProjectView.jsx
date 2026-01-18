@@ -10,6 +10,7 @@ import ProjectMeta from "../components/ProjectMeta.jsx";
 import YarnInfoShort from "../components/YarnInfoShort.jsx";
 import ShowYarnList from "../components/ShowYarnList.jsx";
 import UpdateProjectMetrics from "../components/UpdateProjectMetrics.jsx";
+import { MdInfoOutline } from "react-icons/md";
 
 
 export default function ProjectView() {
@@ -59,6 +60,7 @@ export default function ProjectView() {
         loadingError: null,
         showMeta: false,
         forceReload: false,
+        warpAsWeft: false,
     });
     
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -81,7 +83,13 @@ export default function ProjectView() {
           const weftYarn = response.data.yarns.find(
             (yarn) => yarn.usageType === 1
           );
-          setWeft(weftYarn ? weftYarn : warpYarn);
+          if (weftYarn) 
+            setWeft(weftYarn)
+          else {
+            setWeft(warpYarn);
+            setUiState(prev => ({...prev, warpAsWeft: true}))
+          }
+          // setWeft(weftYarn ? weftYarn : warpYarn);
           
           
       } catch (error) {
@@ -122,13 +130,16 @@ export default function ProjectView() {
       
       <ProjectMeta project={project} showMeta={uiState.showMeta} setUiState={setUiState} />     
 
-      <div className="yarn-metrics">
+      <div className="yarn-metrics-warp">
         <h2>Varpgarn</h2>
         <YarnInfoShort yarn={warp} />
       </div>
       
-      <div className="yarn-metrics">
-        <h2>Inslagsgarn</h2>
+      <div className="yarn-metrics-weft">
+        <h2>Inslagsgarn {uiState.warpAsWeft && (
+            <MdInfoOutline className="icon"  title="Varpgarn används även som inslag" />
+          )}
+        </h2>
         <YarnInfoShort yarn={weft} />
       </div>
       <div className="yarn-calculations">
@@ -174,7 +185,7 @@ export default function ProjectView() {
       <EndsBoxes totalEnds={project?.totalEndsInWarp ?? 0} />
 
     </section>
-    <section>
+    <section className="page-break">
       <h3>Garn i projektet</h3>
 
       <ShowYarnList yarnList={project.yarns} />

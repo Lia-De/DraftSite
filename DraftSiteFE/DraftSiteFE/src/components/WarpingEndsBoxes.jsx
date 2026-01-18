@@ -93,7 +93,7 @@ export default function EndsBoxes({
     </div>
 
       {/* Toggle */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 12, paddingTop: "1rem" }}>
+      <div className="warping-boxes-toggle" style={{ display: "flex", gap: 8, marginBottom: 12, paddingTop: "1rem" }}>
         {warpingGroupOptions.map((size) => (
           <button className={groupSize === size ?"btn-warping-toggle":"btn-warping-toggle-inactive"}
           key={size}

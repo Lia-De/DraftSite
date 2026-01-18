@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import { update } from "../services/APICalls";
-import { useEffect, useState } from "react";
+import { GrEdit } from "react-icons/gr";
 
 export default function UpdateProjectMetrics ({project, setUiState, warp}) {
        
     function MetricForm({ label, fieldName, projectId, onSubmit }) {
-        const { register, handleSubmit, reset,  formState: { errors } } = useForm();
+        const { register, handleSubmit, reset, watch,  formState: { errors } } = useForm();
 
         const submit = (data) => {
             onSubmit({
@@ -14,7 +14,7 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
             });
             reset();
         };
-
+        const value = watch(fieldName);
         return (
             <div className="update-metrics-grid">
             <form onSubmit={handleSubmit(submit)}>
@@ -23,7 +23,10 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
                 className="update-input"
                 {...register(fieldName, {min: {value: 1, message: "Måste vara positivt"}})}
                 />
-                <input type="submit" value={label} />
+                <button type="submit" className="submit-btn"  disabled={!value}>
+                    <GrEdit />
+                    <span>{label}</span>
+                    </button>
                 
                 {errors[fieldName] && (
                 <p className="error">

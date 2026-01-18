@@ -15,6 +15,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     position: relative; /* anchor for absolute children project-meta*/
+    align-items: start;
 }
 
 #project-detail h1, 
@@ -46,20 +47,25 @@
     font-style: normal;
     text-align: justify;
 }
-.yarn-metrics, #warp-metrics-grid {
+.yarn-metrics,
+.yarn-metrics-warp, 
+.yarn-metrics-weft ,
+ #warp-metrics-grid {
     display: grid;
     gap: 1rem;
-    padding: 1rem;
 }  
-.yarn-metrics {
+.yarn-metrics, 
+.yarn-metrics-warp, 
+.yarn-metrics-weft {
     grid-template-columns: 1fr 1fr 1fr;
     border: 1px solid black;
     margin: 0 0.3rem;
     position: relative;
-    padding: 24px 16px 16px;
-    margin-top: 16px;
+    padding: 24px 16px 0px;    
 }
-.yarn-metrics h2 {
+.yarn-metrics h2,
+.yarn-metrics-warp h2, 
+.yarn-metrics-weft h2 {
     position: absolute;
     top: 0;
     left: 50%;
@@ -68,13 +74,17 @@
     padding: 0 8px;
     background: #fff; /* match page background */
     font-size: 1.2rem;
+    z-index: 10;
 }
 #warp-metrics-grid {
     grid-column: 1 / span 4;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-.yarn-metrics p, #warp-metrics-grid p {
-    margin: 0;
+.yarn-metrics p,
+.yarn-metrics-warp p, 
+.yarn-metrics-weft p,
+#warp-metrics-grid p {
+    margin: 0.1rem;
 }
 .span2 {
     grid-column: span 2;
@@ -82,9 +92,14 @@
 }
 #warp-metrics-grid p.opt {
     border: 1px solid black;
+    border-width: 0 1px 1px 0;
+    border-radius: 0 0 0.5rem;
+    box-shadow: 2px 2px 4px rgba(148, 148, 148, 0.2);
+    
 }
 .yarn-calculations {
     grid-column: 1 / span 2;
+    padding: 1rem 0.5rem;
 }
 .yarn-calculations p.span2 {
     text-align: unset;    
@@ -128,18 +143,29 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-.update-metrics-grid input[type=submit] {
+.update-metrics-grid input {
+    border-width: 1px;
+    border-radius: 0.2rem;
+    background-color: #eeeeee
+}
+.submit-btn {
     margin-top: 0.3em;
     margin-left: 0.3rem;
     border-radius: 0.5rem;
     line-height: 1.5rem;
     border-width: 1px;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    padding: 0.1rem;
+    font-size: 0.8rem;
 }
-
+.submit-btn:disabled {
+  /* opacity: 0.8; */
+  box-shadow: unset;
+  cursor: not-allowed;
+}
 .update-input {
     width: 3rem;
-    height: 1.5rem;
+    height: 1.8rem;
     margin: 0 auto;
 }
 

@@ -90,7 +90,6 @@ const [yarnValidationConstants, setYarnValidationConstants]= useState({
     }, [fetchCategory]);
 
     useEffect(() => {
-        console.log("Project list updated:", projectList );
         projectList?.length!=0 && setUiState(prev => ({...prev, projectCount: projectList?.length}))
     }, [projectList]);
 
@@ -114,37 +113,37 @@ return (
             <button onClick={() => onFetchRequest("Projects")}>
                 Hämta projekt 
                 {': ' + uiState.projectCount} 
-                {uiState.isLoading && fetchCategory==="Projects" ? <RxUpdate /> : ""}
+                {uiState.isLoading && fetchCategory==="Projects" ? <RxUpdate className="icon"  /> : ""}
             </button>
             <button onClick={() => onFetchRequest("Yarns") }>
                 Hämta garn 
                 {': ' + uiState.yarnCount} 
-                {uiState.isLoading && fetchCategory==="Yarns" ? <RxUpdate /> : ""}
+                {uiState.isLoading && fetchCategory==="Yarns" ? <RxUpdate className="icon"  /> : ""}
             </button>
             <button onClick={() => onFetchRequest("WarpChains") }>
                 Varpflätor 
                 {': ' + uiState.warpChainCount} 
-                {uiState.isLoading && fetchCategory==="WarpChains" ? <RxUpdate /> : ""}
+                {uiState.isLoading && fetchCategory==="WarpChains" ? <RxUpdate className="icon"  /> : ""}
             </button>
         </section>
         <section>   {/* Buttons to select expanded information */}
-            <button className="btn-toggle" 
+            {projectList && projectList.length>0 && <button className="btn-toggle" 
             onClick={() => setUiState(prev => ({...prev, projectListView: !prev.projectListView}))}>
                 {uiState.projectListView 
-                ? (<> <MdExpandLess />Dölj projektlista </>) 
-                : (<> <MdExpandMore /> Visa projektlista </>)}
-            </button>
-            <button className="btn-toggle"
+                ? (<> <MdExpandLess className="icon"  />Dölj projektlista </>) 
+                : (<> <MdExpandMore className="icon" /> Visa projektlista </>)}
+            </button>}
+             {yarnList && yarnList.length>0 && <button className="btn-toggle"
                 onClick={() => setUiState(prev => ({...prev, yarnListView: !prev.yarnListView}))}>
                 {uiState.yarnListView 
-                ? (<> <MdExpandLess />Dölj Garnlista </>) 
-                : (<> <MdExpandMore /> Visa Garnlista </>)                }
-            </button>
+                ? (<> <MdExpandLess className="icon" />Dölj Garnlista </>) 
+                : (<> <MdExpandMore className="icon" /> Visa Garnlista </>)                }
+            </button>}
 
             <button className="btn-toggle" onClick={() => setUiState(prev => ({...prev, adminView: !prev.adminView}))}>
             {uiState.adminView 
-            ? (<><MdExpandLess /> Stäng admin vy</>) 
-            : (<><MdExpandMore /> Visa admin vy</>)}
+            ? (<><MdExpandLess className="icon" /> Stäng admin vy</>) 
+            : (<><MdExpandMore className="icon" /> Visa admin vy</>)}
             </button>
         </section>
                 {/* Display the expanded information checked from the Button section */}

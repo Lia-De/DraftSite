@@ -1,4 +1,7 @@
+import '../css/yarnInfo.css';
 import { useState } from "react";
+import { MdExpandMore } from "react-icons/md";
+import { MdExpandLess } from "react-icons/md";
 import { YARN_FIBRE_LABELS, YARN_USAGE_LABELS } from "../constants/yarnConstants.js";
 
 export default function YarnInfoShort({ yarn }) {
@@ -6,27 +9,30 @@ export default function YarnInfoShort({ yarn }) {
     return (
         <>
         <p>{yarn.brand}</p>
-        <p>{yarn.color} {yarn.colorCode ? "(" + yarn.colorCode + ")" : ""}</p>
-        {yarn.dyeLot && <p>Färgbad: {yarn.dyeLot}</p>}
-        <p>{yarn.thicknessNM} / {yarn.ply} Nm</p>
+        <p>{yarn.color} {yarn.colorCode ? "(" + yarn.colorCode + ") " : " "} 
+          {yarn.dyeLot && "Färgbad: "+yarn.dyeLot}</p>
+        
+        <p>{yarn.thicknessNM}/{yarn.ply} Nm</p>
         <p>{yarn.weightPerSkeinGrams} g</p>
         <p>{yarn.lengthPerSkeinMeters} m</p>
         <p >Nystan: {yarn.numberOfSkeins}</p>
-
-
-    {/* <section>
-      <h3>Garn i projektet</h3>
-              <strong>{yarn.brand}</strong> – {yarn.color}
-              <ul>
-                <li>Används som: {YARN_USAGE_LABELS[yarn.usageType]}</li>
-                <li>Fiber: {YARN_FIBRE_LABELS[yarn.fibreType]}</li>
-                <li>Storlek: Nm {yarn.thicknessNM} / {yarn.ply}</li>
-                <li>Vikt/nystan: {yarn.weightPerSkeinGrams} g</li>
-                <li>Längd/nystan: {yarn.lengthPerSkeinMeters} m</li>
-                <li>Antal nystan: {yarn.numberOfSkeins}</li>
-                <li>Total price: {yarn.totalPrice} kr</li>
-              </ul>
-    </section> */}
+        
+        <section id="yarn-extended-info">
+          {!showInfo && <MdExpandMore size="2rem" className="icon" onClick={() => (setShowInfo(prev => !prev))}/>}
+          {showInfo && 
+          (
+            <>
+            <MdExpandLess className="icon" size="2rem" onClick={() => (setShowInfo(prev => !prev))}/>
+             
+                <p><i>Används som</i>: {YARN_USAGE_LABELS[yarn.usageType]}</p>
+                <p><i>Fiber</i>: {YARN_FIBRE_LABELS[yarn.fibreType]}</p>
+                <p><i>Inköpspris</i>: {yarn.totalPrice} kr ({yarn.pricePerSkein} kr/st)</p>
+                {yarn.notes && <p><i>Anteckning</i>: {yarn.notes}</p>}
+              
+              </>
+          )
+            }
+        </section>
 
         </>
         )
