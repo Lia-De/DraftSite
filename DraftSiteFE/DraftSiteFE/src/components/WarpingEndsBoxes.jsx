@@ -1,4 +1,5 @@
 import { useState } from "react";
+import WarpChains from "./WarpChains";
 
 export default function EndsBoxes({
   totalEnds,
@@ -15,8 +16,8 @@ export default function EndsBoxes({
   const remainderBoxes = remainder > 0 ? Math.floor(remainder/2) : 0;
 
   return (
-    <>
-    <div>
+    <div className="warping-help">
+    <div className="warping-boxes-box">
       {/* Legend */}
       <div
         style={{
@@ -93,7 +94,7 @@ export default function EndsBoxes({
     </div>
 
       {/* Toggle */}
-      <div className="warping-boxes-toggle" style={{ display: "flex", gap: 8, marginBottom: 12, paddingTop: "1rem" }}>
+      <div className="warping-boxes-toggle" >
         {warpingGroupOptions.map((size) => (
           <button className={groupSize === size ?"btn-warping-toggle":"btn-warping-toggle-inactive"}
           key={size}
@@ -103,7 +104,8 @@ export default function EndsBoxes({
           </button>
         ))}
       </div>
-      </>
+        <WarpChains totalEnds={totalEnds} />
+      </div>
 
   );
 }

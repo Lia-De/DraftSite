@@ -83,22 +83,24 @@
   .project-meta-link,
   .update-metrics-grid,
   .yarn-metrics-weft,
-  .warping-boxes-toggle {
+  .warping-boxes-toggle,
+  .chain-control {
     display: none !important;
   }
   body {
     font-size: 0.8rem;
   }
+  #project-detail {
+    position: static !important;
+  }
   .yarn-metrics-warp {
     grid-column: 1 / span 2;
     padding: 0;
-    position: revert;
+    position: static !important;
   }
   .yarn-metrics-warp h2 {
-    position:revert;
-    top: auto;
-    left: auto;
-    transform: 0;
+    position: static !important;   /* return to normal flow */
+    transform: none !important;    /* reset translate */
   }
   .page-break {
     page-break-before: always; /* legacy */
