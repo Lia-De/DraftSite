@@ -2,9 +2,8 @@ import { useForm } from "react-hook-form";
 import { update } from "../services/APICalls";
 import { useEffect, useState } from "react";
 
-export default function UpdateProjectMetrics ({project, setUiState}) {
-    const [updatedProject, setUpdatedProject] = useState({});
-   
+export default function UpdateProjectMetrics ({project, setUiState, warp}) {
+       
     function MetricForm({ label, fieldName, projectId, onSubmit }) {
         const { register, handleSubmit, reset,  formState: { errors } } = useForm();
 
@@ -50,7 +49,7 @@ export default function UpdateProjectMetrics ({project, setUiState}) {
     
     };
 
-    return (
+   return warp ?  (
     <>
         <MetricForm
         label="Bredd"
@@ -80,5 +79,17 @@ export default function UpdateProjectMetrics ({project, setUiState}) {
         onSubmit={handleMetricSubmit}
         />
     </>
+    )
+    :  (
+        <>
+        <span></span>
+        <MetricForm
+            label="PPC"
+            fieldName="picksPerCm"
+            projectId={project.id}
+            onSubmit={handleMetricSubmit}
+        />
+        </>
     );
+    
 }

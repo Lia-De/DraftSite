@@ -144,7 +144,7 @@ export default function ProjectView() {
           <p className="opt">{project.warpLengthMeters} </p>
           <p className="opt">{project.totalEndsInWarp}</p>
 
-          <UpdateProjectMetrics project={project} setUiState={setUiState}/>
+          <UpdateProjectMetrics project={project} setUiState={setUiState} warp={true}/>
 
           <p className="span2"></p>
           <p>Åtgång varp (m)</p>
@@ -163,8 +163,11 @@ export default function ProjectView() {
           <p className="opt">{project.picksPerCm}</p>
           <p className="opt">{project.totalWeftLengthMeters} </p>
           <p className="opt"> {(project?.totalWeftLengthMeters / weft?.lengthPerSkeinMeters).toFixed(2) } </p>
+
+          <UpdateProjectMetrics project={project} setUiState={setUiState} warp={false}/>
+
         </div>  
-        </div>
+      </div>
       <hr />     
       <h3>Varpa - räkning</h3>
 
