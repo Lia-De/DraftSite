@@ -111,10 +111,10 @@ namespace DraftSiteBE.Models
         public int TotalWarpSkeinsNeeded => WarpChains.Sum(w => w.SkeinsNeeded);
 
         // incorrect
-        public decimal TotalYarnWeightGrams => Yarns.Sum(y => y.TotalWeightGrams);
+        public decimal? TotalYarnWeightGrams => Yarns.Sum(y => y.TotalWeightGrams);
         // incorrect
-        public double TotalYarnLengthMeters => Yarns.Sum(y => y.TotalLengthMeters);
-        public decimal TotalYarnPrice => Yarns.Sum(y => y.TotalPrice);
+        public double? TotalYarnLengthMeters => Yarns.Sum(y => y.TotalLengthMeters);
+        public decimal? TotalYarnPrice => Yarns.Sum(y => y.TotalPrice);
 
         // Administrative metadata
         public ProjectStatus Status { get; set; } = ProjectStatus.Planned;

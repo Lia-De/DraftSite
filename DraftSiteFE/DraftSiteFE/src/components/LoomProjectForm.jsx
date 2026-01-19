@@ -216,7 +216,7 @@ export default function LoomProjectForm({ onSubmit }) {
           Nystan: 
           <input className="opt-half" type="number" 
             {...register(`yarns.${index}.numberOfSkeins`, { valueAsNumber: true,
-              min: { value: 1, message: "Antal nystan måste vara 1 eller mer" }
+              required, min: { value: 1, message: "Antal nystan måste vara 1 eller mer" }
              })} />
         </label>
         {/* errors */}

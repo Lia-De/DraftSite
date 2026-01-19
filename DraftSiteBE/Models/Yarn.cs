@@ -26,12 +26,12 @@ namespace DraftSiteBE.Models
         // Yarn measurements (units clarified in property names)
         public decimal WeightPerSkeinGrams { get; set; }    // grams per skein
         public double LengthPerSkeinMeters { get; set; }   // meters per skein
-        public int NumberOfSkeins { get; set; }
-        public decimal PricePerSkein { get; set; }         // currency per skein
+        public int? NumberOfSkeins { get; set; }
+        public decimal? PricePerSkein { get; set; }         // currency per skein
 
         // Computed helpers
-        public decimal TotalWeightGrams => WeightPerSkeinGrams * NumberOfSkeins;
-        public double TotalLengthMeters => LengthPerSkeinMeters * NumberOfSkeins;
-        public decimal TotalPrice => PricePerSkein * NumberOfSkeins;
+        public decimal? TotalWeightGrams => NumberOfSkeins >0 ? WeightPerSkeinGrams * NumberOfSkeins : null;
+        public double? TotalLengthMeters => NumberOfSkeins>0 ? LengthPerSkeinMeters * NumberOfSkeins : null;
+        public decimal? TotalPrice => NumberOfSkeins>0 ? PricePerSkein * NumberOfSkeins : null;
     }
 }
