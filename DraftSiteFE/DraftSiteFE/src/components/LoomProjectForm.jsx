@@ -1,13 +1,15 @@
-import React from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import React, { useState } from "react";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import { defaultYarn, USAGE_TYPES, FIBRE_TYPES } from "../constants/yarnConstants";
+import { MdPlaylistRemove } from "react-icons/md";
+import { MdAddCircleOutline } from "react-icons/md";
 
 export default function LoomProjectForm({ onSubmit }) {
-  const { register, control, handleSubmit, formState: { errors } } = useForm({
+  const { register, control, watch, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      name: "",
-      description: "",
-      owner: "",
+      name: null,
+      description: null,
+      owner: null,
       weavingWidthCm: null,
       inputEndsInWarp: null,
       endsPerCm: null,
@@ -35,53 +37,284 @@ export default function LoomProjectForm({ onSubmit }) {
     }
   });
 
-  const { fields: tagFields, append: appendTag, remove: removeTag } = useFieldArray({ control, name: "tags" });
-  const { fields: yarnFields, append: appendYarn, remove: removeYarn } = useFieldArray({ control, name: "yarns" });
-  const { fields: chainFields, append: appendChain, remove: removeChain } = useFieldArray({ control, name: "warpChains" });
+  const { fields: tagFields, append: appendTag, remove: removeTag } = 
+    useFieldArray({ control, name: "tags" });
+  const { fields: yarnFields, append: appendYarn, remove: removeYarn } = 
+    useFieldArray({ control, name: "yarns" });
+  const { fields: chainFields, append: appendChain, remove: removeChain } = 
+    useFieldArray({ control, name: "warpChains" });
 
+    const calcFields = {};
+    calcFields.endsPerCm = useWatch({control, name:"endsPerCm"});
+    calcFields.weavingWidthCm = useWatch({control, name:"weavingWidthCm"});
+    calcFields.picksPerCm = useWatch({control, name:"picksPerCm"});
+    calcFields.warpLengthMeters = useWatch({control, name:"warpLengthMeters"});
+    calcFields.lengthPerSkeinMeters = useWatch({control, name:"yarns.0.lengthPerSkeinMeters"});
+
+    const totalEnds = calcFields.endsPerCm && calcFields.weavingWidthCm
+    ? Math.round(calcFields.endsPerCm * calcFields.weavingWidthCm)
+    : null;
+
+  const [uiLabel, setUiLabel] = useState({
+    totalWarpLength: null,
+    totalWeftLength: null,
+    warpSkeins: null,
+    weftSkeins: null,
+  })
+  React.useEffect(() => {
+    // Calculate total warp length and skeins
+    if (calcFields.endsPerCm && calcFields.weavingWidthCm) {
+      const totalWarpLength = (calcFields.endsPerCm * calcFields.weavingWidthCm) * calcFields.warpLengthMeters; // Example calculation
+      const warpSkeins = calcFields.lengthPerSkeinMeters 
+        ?  (totalWarpLength / calcFields.lengthPerSkeinMeters).toFixed(2)
+        : null;
+      setUiLabel(prev => ({
+        ...prev,
+        totalWarpLength,
+        warpSkeins
+      }));
+    }}, [calcFields.endsPerCm, calcFields.weavingWidthCm, calcFields.warpLengthMeters, calcFields.lengthPerSkeinMeters]);
+  
+    React.useEffect(() => {
+    // Calculate total weft length and skeins
+    if (calcFields.picksPerCm && calcFields.weavingWidthCm) {
+      const totalWeftLength = (calcFields.picksPerCm * calcFields.weavingWidthCm) * calcFields.warpLengthMeters; // Example calculation
+      const weftSkeins = calcFields.lengthPerSkeinMeters 
+      ? (totalWeftLength / calcFields.lengthPerSkeinMeters).toFixed(2)
+      : null;
+      setUiLabel(prev => ({
+        ...prev,  
+        totalWeftLength,
+        weftSkeins
+      }));
+    }}, [calcFields.picksPerCm, calcFields.weavingWidthCm, calcFields.warpLengthMeters, calcFields.lengthPerSkeinMeters]);
   return (
+    <>
+    
     <form onSubmit={handleSubmit(onSubmit)} className="create-form">
-      <h2>Create Loom Project</h2>
+     <section id="project-detail">
 
-      <label>
-        Name
-        <input {...register("name", {required: true})} />
+      <label className="span2">
+        <h2>Projektnamn</h2>
+        <input className="opt-long" placeholder="* Projektnamn" {...register("name", {required: true})} />
       </label>
 
-      <label>
-        Description
-        <textarea {...register("description")} />
+      <label className="span2">
+      <textarea rows="3" placeholder="Beskrivning" className="opt-long" {...register("description")} />
       </label>
+      <label className="span2">
+        Projektägare
+        <input className="opt-long" {...register("owner")} />
+  </label>
 
-      <label>
-        Owner
-        <input {...register("owner")} />
-      </label>
+      <div className="yarn-metrics-warp">
+        <h2>Garn</h2>
+        {/* <YarnInfoShort yarn={warp} /> */}
+    {yarnFields.map((yarn, index) => (
+      <div key={yarn.id} className="yarn-entry">
+        <label className="span3">
+          Märke: 
+          <input className="opt-long" {...register(`yarns.${index}.brand`)} />
+        </label>
+        <label>
+          Nm (tjocklek/trådar) <br />
+          <input className="opt-half" type="number" 
+          {...register(`yarns.${index}.thicknessNM`, { valueAsNumber: true ,
+            required: "Tjocklek (Nm) är obligatoriskt",
+            min: { value: 1, message: "Tjocklek måste vara större än 0" }
+            })} />
+          /<input className="opt-half" type="number" 
+          {...register(`yarns.${index}.ply`, { valueAsNumber: true ,
+            required: "Trådantal (Nm) är obligatoriskt",
+            min: { value: 1, message: "Trådar måste vara större än 0" }
+          })} />
+        </label>
+        <label>
+          Färg <br />
+          <input className="opt" {...register(`yarns.${index}.color`)} />
+        </label>
+        <label>
+          Färgkod <br />
+          <input className="opt" {...register(`yarns.${index}.colorCode`)} />
+        </label>
+        {/* Error messages */}
+        {errors?.yarns?.[index]?.thicknessNM && (
+          <p className="error">
+            {errors.yarns[index].thicknessNM.message}
+          </p>
+        )}
 
-      <label>
-        Weaving Width (cm)
-        <input type="number" {...register("weavingWidthCm", { valueAsNumber: true })} />
-      </label>
+        {errors?.yarns?.[index]?.ply && (
+          <p className="error">
+            {errors.yarns[index].ply.message}
+          </p>
+        )}
+        <span className="yarn-entry">
+        <h4>Nystan</h4>
+        <label>
+          Vikt (g)
+          <input className="opt" type="number" 
+          {...register(`yarns.${index}.weightPerSkeinGrams`, { valueAsNumber: true ,
+            required: "Vikt är obligatoriskt",
+            min: { value: 1, message: "Vikt måste vara större än 0" }
+          })} />
+        </label>
+        <label>
+          Längd (m)
+          <input className="opt" type="number" 
+          {...register(`yarns.${index}.lengthPerSkeinMeters`, { valueAsNumber: true ,
+            required: "Längd är obligatoriskt",
+            min: { value: 1, message: "Längd måste vara större än 0" }
+          })} />
+        </label>
+        <label>
+          Pris
+          <input className="opt" type="number" {...register(`yarns.${index}.pricePerSkein`, { valueAsNumber: true })} />
+        </label>
+          {/* Error messages */}
+        {errors?.yarns?.[index]?.weightPerSkeinGrams && (
+          <p className="error">
+            {errors.yarns[index].weightPerSkeinGrams.message}
+          </p>
+        )}
+        {errors?.yarns?.[index]?.lengthPerSkeinMeters && (
+          <p className="error">
+            {errors.yarns[index].lengthPerSkeinMeters.message}
+          </p>
+        )}
 
-      <label>
-        Input Ends in Warp
-        <input type="number" {...register("inputEndsInWarp", { valueAsNumber: true })} />
-      </label>
+        <label className="col1">
+        Fiber:&nbsp;
+        <select className="opt-double"
+            {...register(`yarns.${index}.fibreType`, {
+            valueAsNumber: true
+            })}>
+            <option value="">Välj fiber</option>
+            {FIBRE_TYPES.map(opt => (
+            <option key={opt.value} value={opt.value}>
+                {opt.label}
+            </option>
+            ))}
+        </select>
+        </label>
+        <label>
+        Syfte:&nbsp;
+        <select className="opt-double"
+            {...register(`yarns.${index}.usageType`, {
+            valueAsNumber: true
+            })}
+        >
+            <option value="">Välj alternativ</option>
+            {USAGE_TYPES.map(opt => (
+            <option key={opt.value} value={opt.value}>
+                {opt.label}
+            </option>
+            ))}
+        </select>
+        </label>
+        <label>
+          Nystan: 
+          <input className="opt-half" type="number" 
+            {...register(`yarns.${index}.numberOfSkeins`, { valueAsNumber: true,
+              min: { value: 1, message: "Antal nystan måste vara 1 eller mer" }
+             })} />
+        </label>
+        {/* errors */}
+        {errors?.yarns?.[index]?.numberOfSkeins && (
+          <p className="error col3">
+            {errors.yarns[index].numberOfSkeins.message}
+          </p>
+        )}
+        </span>
+        <label className="span3">
+          Anteckning
+          <input className="opt-long" {...register(`yarns.${index}.notes`)} />
+        </label>
+        <button className="col2" type="button" onClick={() => removeYarn(index)}>
+          <MdPlaylistRemove style={{ color: "red" }} /> Ta bort garn
+        </button>
+      </div>
+    ))}
+    <button className="col2" type="button" onClick={() => appendYarn({...defaultYarn})}>
+      <MdAddCircleOutline  /> Lägg till garn
+    </button>
 
-      <label>
-        Ends per Cm
-        <input type="number" {...register("endsPerCm", { valueAsNumber: true })} />
-      </label>
+      </div>
+      
+      <div className="yarn-calculations">
 
-      <label>
-        Picks per Cm
-        <input type="number" {...register("picksPerCm", { valueAsNumber: true })} />
-      </label>
+        <div id="warp-metrics-grid">
+          
+          <label className="col1"> Vävbredd (cm)
+            <input className="opt" type="number" 
+            {...register("weavingWidthCm", { valueAsNumber: true,
+              required: "Vävbredd är obligatoriskt",
+              min: { value: 1, message: "Vävbredd måste vara större än 0" }
+             })} />
+             </label>
+          <label>EPC <br />
+          <input className="opt" type="number" {...register("endsPerCm", { valueAsNumber: true,
+            required: "EPC är obligatoriskt",
+            min: { value: 1, message: "EPC måste vara större än 0" }
+           })} />
+           </label>
+           <label>Längd (m) <br />
+          <input className="opt" type="number" {...register("warpLengthMeters", { valueAsNumber: true,
+            required: "Längd är obligatoriskt",
+            min: { value: 1, message: "Längd måste vara större än 0" }
+           })} /></label>
+          <label>Trådar 
+          <input className="opt" type="number" disabled placeholder={totalEnds ? totalEnds : '-'} {...register("inputEndsInWarp", { valueAsNumber: true })} />
+          </label>
+          {/* Error messages */}
+          {errors.weavingWidthCm && (
+            <p className="error col1">
+              {errors.weavingWidthCm.message}
+            </p>
+          )}
+          {errors.endsPerCm && (
+            <p className="error col2">
+              {errors.endsPerCm.message}
+            </p>
+          )}
+          {errors.warpLengthMeters && (
+            <p className="error col3">
+              {errors.warpLengthMeters.message}
+            </p>
+          )}
+          
+          <p className="col3">Åtgång varp (m)</p>
+          <p className="col4">Åtgång nystan</p>
 
-      <label>
-        Warp Length (meters)
-        <input type="number" {...register("warpLengthMeters", { valueAsNumber: true })} />
-      </label>
+          <p className="col3">{uiLabel.totalWarpLength ? uiLabel.totalWarpLength : '-'}</p>
+          <p className="col4">{uiLabel.warpSkeins ? uiLabel.warpSkeins : '-'}</p>
+          
+
+          <p className="col3">Åtgång inslag (m)</p>
+          <p>Åtgång nystan</p>
+          
+          <label className="col2">PPC:&nbsp; 
+          <input className="opt" type="number" 
+            {...register("picksPerCm", { valueAsNumber: true,
+              required: "Inslag per cm (PPC) är obligatoriskt",
+              min: { value: 1, message: "Inslag per cm (PPC) måste vara större än 0" }
+             })} />
+          </label>
+          <p className="col3">{uiLabel.totalWeftLength ? uiLabel.totalWeftLength : '-' }</p>
+          <p className="col4">{uiLabel.weftSkeins ? uiLabel.weftSkeins : '-'}</p>
+          {/* Error messages */}
+          {errors.picksPerCm && (
+            <p className="error col2">
+              {errors.picksPerCm.message}
+            </p>
+          )}
+        </div>  
+      </div>
+    </section>
+ 
+
+
+
 
       {/* Tags */}
       <div>
@@ -96,7 +329,7 @@ export default function LoomProjectForm({ onSubmit }) {
       </div>
 
       {/* Yarns */}
-      <div>
+      {/* <div>
         <h3>Yarns</h3>
         {yarnFields.map((yarn, index) => (
           <div key={yarn.id} style={{ border: "1px solid #ccc", padding: 8, marginBottom: 8 }}>
@@ -165,7 +398,7 @@ export default function LoomProjectForm({ onSubmit }) {
           appendYarn({...defaultYarn
           })
         }>Add Yarn</button>
-      </div>
+      </div> */}
 
       {/* Warp Chains */}
       <div>
@@ -218,5 +451,6 @@ export default function LoomProjectForm({ onSubmit }) {
 
       <button type="submit">Create Project</button>
     </form>
+    </>
   );
 }

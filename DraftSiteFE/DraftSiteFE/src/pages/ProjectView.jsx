@@ -54,11 +54,12 @@ export default function ProjectView() {
             setWeft(warpYarn);
             setUiState(prev => ({...prev, warpAsWeft: true}))
           }
-          // setWeft(weftYarn ? weftYarn : warpYarn);
-          
+         
           
       } catch (error) {
           console.error("Error fetching project:", error);
+          setUiState(prevState => ({...prevState, loadingError: "Hittade inte projektet."}));
+
       } finally {
           setUiState(prevState => ({...prevState, isLoading: false}));
       }
@@ -81,7 +82,10 @@ export default function ProjectView() {
 
     }, [projectList, projectId]);
 
-    if (!project) return null;
+    if (!project) return (
+      uiState.loadingError 
+      ? <p>{uiState.loadingError} <Link to="/"><RiExpandLeftFill /> Tillbaka till framsidan</Link></p> 
+      : <p>Laddar projekt... {uiState.loadingError}</p>);
 
 
   return (

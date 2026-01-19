@@ -18,11 +18,11 @@
     align-items: start;
 }
 
-#project-detail h1, 
-#project-detail h2, 
-#project-detail h3, 
-#project-detail h4, 
-#project-detail h5 {
+#project-detail > h1, 
+#project-detail > h2, 
+#project-detail > h3, 
+#project-detail > h4, 
+#project-detail > h5 {
     grid-column: 1 / span 4;
     margin-bottom: 0.2rem;
     font-family: "Tinos", serif;

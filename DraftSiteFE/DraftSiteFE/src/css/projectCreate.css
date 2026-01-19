@@ -1,9 +1,86 @@
 .create-form {
+    max-width: 750px;
 }
 .create-form label {
     text-align: right;
     display: block;
 }
 .create-form input {
- line-height: 1.2rem;   
+ line-height: 1.2rem;
+ text-align:center;
+}
+.create-form label {
+    font-style:italic;
+}
+.opt, 
+.opt-half, 
+.opt-long,
+.opt-double {
+    margin-left: auto;
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+    max-width: 6rem;
+    border: 1px solid black;
+    border-width: 0 1px 1px 0;
+    border-radius: 0 0 0.5rem;
+    box-shadow: 2px 2px 4px rgba(148, 148, 148, 0.2);
+}
+.opt-half {
+    width: 3rem;
+}
+.opt-long {
+    max-width: 100%;
+    width: 30rem;
+    margin-left: 1rem;
+}
+.opt-double {
+    max-width: 100%;
+    width: 8rem;
+    margin:auto 0.2rem;
+    padding-left: 0.2rem;
+}
+select.opt-double, .create-form textarea, input  {
+    font-family: Rubik, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+}
+.yarn-entry h4 {
+    margin-top: 0.5rem;
+    grid-column: span 3;
+}
+.span3 {
+    grid-column: span 3;
+}
+.yarn-metrics-warp {
+    grid-column: 1 / span 2;
+    padding: 1.5rem 0;
+    border: 1px dotted #ccc;
+    margin-top: 1rem;
+}
+
+.yarn-entry {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    grid-column: 1/ span 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+#warp-metrics-grid > label {
+    text-align:center;
+}
+.col1 {
+    grid-column: 1/2;
+}
+.col2   {
+    grid-column: 2/3;
+}
+.col3 {
+    grid-column: 3/4;
+}
+.col4 {
+    grid-column: 4/5;
+}
+.yarn-calculations {
+   border: 1px solid #ccc;
+    margin: 0.3rem;
 }

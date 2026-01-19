@@ -2,7 +2,8 @@ import '../css/yarnInfo.css';
 import { useState } from "react";
 import { MdExpandMore } from "react-icons/md";
 import { MdExpandLess } from "react-icons/md";
-import { YARN_FIBRE_LABELS, YARN_USAGE_LABELS } from "../constants/yarnConstants.js";
+import { USAGE_TYPES,  FIBRE_TYPES } from '../constants/yarnConstants.js';
+
 
 export default function YarnInfoShort({ yarn }) {
   const [showInfo, setShowInfo] = useState(false);
@@ -24,8 +25,8 @@ export default function YarnInfoShort({ yarn }) {
             <>
             <MdExpandLess className="icon" size="2rem" onClick={() => (setShowInfo(prev => !prev))}/>
              
-                <p><i>Används som</i>: {YARN_USAGE_LABELS[yarn.usageType]}</p>
-                <p><i>Fiber</i>: {YARN_FIBRE_LABELS[yarn.fibreType]}</p>
+                <p><i>Används som</i>: {USAGE_TYPES[yarn.usageType].label}</p>
+                <p><i>Fiber</i>: {FIBRE_TYPES[yarn.fibreType].label}</p>
                 <p><i>Inköpspris</i>: {yarn.totalPrice} kr ({yarn.pricePerSkein} kr/st)</p>
                 {yarn.notes && <p><i>Anteckning</i>: {yarn.notes}</p>}
               
