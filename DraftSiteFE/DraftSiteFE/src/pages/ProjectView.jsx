@@ -34,7 +34,6 @@ export default function ProjectView() {
     const fetchProjectById = async () => {
       setUiState(prevState => ({...prevState, isLoading: true}));
       try {
-          // const response =  await axios.get(`${API_BASE_URL}/projects/${projectId}`);
           const response = await getById('projects', projectId)
           
           setProject(response);

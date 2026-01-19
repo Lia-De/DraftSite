@@ -147,7 +147,7 @@ namespace DraftSiteBE.Controllers
 
         // PATCH api/projects/parameters
         // Update numeric weaving parameters for a project (width, ends per cm, picks per cm, total ends).
-        [HttpPatch("parameters")]
+        [HttpPatch("update")]
         public async Task<ActionResult<LoomProject>> UpdateParameters([FromBody] UpdateProjectParametersDto dto)
         {
             if (dto == null) return BadRequest("Request body required.");

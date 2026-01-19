@@ -40,7 +40,7 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
     const handleMetricSubmit = async (payload) => {
         
         try {
-            const result = await update('Projects/parameters', payload);
+            const result = await update('Projects/update', payload);
         } catch (err) {
             console.error(`Error fetching ${fetchCategory} data:`, err);
             setUiState(prevState => ({...prevState, loadingError: err.message || "Unknown error"}));
