@@ -328,78 +328,6 @@ export default function LoomProjectForm({ onSubmit }) {
         <button type="button" onClick={() => appendTag("")}>Add Tag</button>
       </div>
 
-      {/* Yarns */}
-      {/* <div>
-        <h3>Yarns</h3>
-        {yarnFields.map((yarn, index) => (
-          <div key={yarn.id} style={{ border: "1px solid #ccc", padding: 8, marginBottom: 8 }}>
-            <label>
-              Brand
-              <input {...register(`yarns.${index}.brand`)} />
-            </label>
-            <label>
-              Color
-              <input {...register(`yarns.${index}.color`)} />
-            </label>
-            <label>
-              Color code
-              <input {...register(`yarns.${index}.colorCode`)} />
-            </label>
-            <label>
-              Ply
-              <input type="number" {...register(`yarns.${index}.ply`, { valueAsNumber: true })} />
-            </label>
-            <label>
-              Weight (grams)
-              <input type="number" {...register(`yarns.${index}.weightPerSkeinGrams`, { valueAsNumber: true })} />
-            </label>
-            <label>
-              Length (meters)
-              <input type="number" {...register(`yarns.${index}.lengthPerSkeinMeters`, { valueAsNumber: true })} />
-            </label>
-            <label>
-            Fibre type
-            <select
-                {...register(`yarns.${index}.fibreType`, {
-                valueAsNumber: true
-                })}
-            >
-                <option value="">Select fibre</option>
-                {FIBRE_TYPES.map(opt => (
-                <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                </option>
-                ))}
-            </select>
-            </label>
-            <label>
-            Usage type
-            <select
-                {...register(`yarns.${index}.usageType`, {
-                valueAsNumber: true
-                })}
-            >
-                <option value="">Select usage</option>
-                {USAGE_TYPES.map(opt => (
-                <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                </option>
-                ))}
-            </select>
-            </label>
-            <label>
-              Notes
-              <input {...register(`yarns.${index}.notes`)} />
-            </label>
-            <button type="button" onClick={() => removeYarn(index)}>Remove Yarn</button>
-          </div>
-        ))}
-        <button type="button" onClick={() =>
-          appendYarn({...defaultYarn
-          })
-        }>Add Yarn</button>
-      </div> */}
-
       {/* Warp Chains */}
       <div>
         <h3>Warp Chains</h3>
@@ -434,7 +362,6 @@ export default function LoomProjectForm({ onSubmit }) {
         ))}
         <button type="button" onClick={() =>
           appendChain({
-            id: "",
             name: "",
             order: null,
             crossCount: null,

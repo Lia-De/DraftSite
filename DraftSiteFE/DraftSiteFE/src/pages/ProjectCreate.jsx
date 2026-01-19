@@ -6,6 +6,11 @@ import '../css/projectCreate.css';
 
 export default function ProjectCreate() {
 
+    const createProject = async (data) => {
+        console.log("Creating project with data:", data);
+        // Here you would typically send the data to your backend API
+        
+    }
 
     return (
         <>
@@ -13,7 +18,7 @@ export default function ProjectCreate() {
         <Link to="/"><RiExpandLeftFill /> Tillbaka </Link>
 
 
-        <LoomProjectForm onSubmit={(data) => console.log("Project DTO:", data)} />
+        <LoomProjectForm onSubmit={createProject} />
 
 
         </>
