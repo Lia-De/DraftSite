@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { RiExpandLeftFill } from "react-icons/ri";
 import LoomProjectForm from "../components/LoomProjectForm";
-import '../css/projectCreate.css';
+
 
 export default function ProjectCreate() {
 

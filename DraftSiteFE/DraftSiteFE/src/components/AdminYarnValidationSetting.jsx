@@ -14,7 +14,7 @@ export default function AdminYarnValidationSetting({
 
     return (
         <>
-        <form onSubmit={handleSubmit(onSubmit)} className="yarn-validation-form"
+        <form onSubmit={handleSubmit(onSubmit)} className="yarnValidationForm"
          style={{marginTop: '20px', border: '1px solid gray', padding: '10px'}}>
             <h2>Giltiga garnegenskaper</h2>
             <h3>NM = tjocklek / antal trådar</h3>

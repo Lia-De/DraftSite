@@ -5,7 +5,7 @@
     /* padding: 0; */
 }
 
-#project-detail {
+#projectDetail {
     /* border: 1px solid green; */
     padding: 1rem;
     margin-top: 1rem;
@@ -18,11 +18,11 @@
     align-items: start;
 }
 
-#project-detail > h1, 
-#project-detail > h2, 
-#project-detail > h3, 
-#project-detail > h4, 
-#project-detail > h5 {
+#projectDetail > h1, 
+#projectDetail > h2, 
+#projectDetail > h3, 
+#projectDetail > h4, 
+#projectDetail > h5 {
     grid-column: 1 / span 4;
     margin-bottom: 0.2rem;
     font-family: "Tinos", serif;
@@ -30,7 +30,7 @@
     font-style: normal;
     margin-top: 0.2rem;
 }
-#project-detail hr {
+#projectDetail hr {
     grid-column: 1 / span 4;
     border: none;
     height: 1px;
@@ -38,7 +38,7 @@
     background-color: #929292;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
-#project-detail .desc {
+#projectDetail .desc {
     grid-column: 1 / span 4;
     margin-top: 0;
     margin-bottom: 1rem;
@@ -49,25 +49,24 @@
     border: 1px dotted grey;
     background-color: rgb(241, 241, 241);
 }
-.yarn-metrics,
-.yarn-metrics-warp, 
-.yarn-metrics-weft ,
- #warp-metrics-grid {
+.yarnMetrics,
+.yarnMetricsWarp, 
+.yarnMetricsWeft {
     display: grid;
     gap: 1rem;
 }  
-.yarn-metrics, 
-.yarn-metrics-warp, 
-.yarn-metrics-weft {
+.yarnMetrics, 
+.yarnMetricsWarp, 
+.yarnMetricsWeft {
     grid-template-columns: 1fr 1fr 1fr;
-    border: 1px solid black;
+    border: 1px solid #ccc;
     margin: 0 0.3rem;
     position: relative;
     padding: 24px 16px 0px;    
 }
-.yarn-metrics h2,
-.yarn-metrics-warp h2, 
-.yarn-metrics-weft h2 {
+.yarnMetrics h2,
+.yarnMetricsWarp h2, 
+.yarnMetricsWeft h2 {
     position: absolute;
     top: 0;
     left: 50%;
@@ -78,35 +77,69 @@
     font-size: 1.2rem;
     z-index: 10;
 }
-#warp-metrics-grid {
+#warpMetricsGrid {
     grid-column: 1 / span 4;
+    display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
 }
-.yarn-metrics p,
-.yarn-metrics-warp p, 
-.yarn-metrics-weft p,
-#warp-metrics-grid p {
+.yarnMetrics p,
+.yarnMetricsWarp p, 
+.yarnMetricsWeft p,
+#warpMetricsGrid p {
     margin: 0.1rem;
 }
 .span2 {
     grid-column: span 2;
     text-align: start;
 }
-#warp-metrics-grid p.opt {
+.span3 {
+    grid-column: span 3;
+}
+.col1 {
+    grid-column: 1/2;
+}
+.col2   {
+    grid-column: 2/3;
+}
+.col3 {
+    grid-column: 3/4;
+}
+.col4 {
+    grid-column: 4/5;
+}
+#warpMetricsGrid p.opt {
     border: 1px solid black;
     border-width: 0 1px 1px 0;
     border-radius: 0 0 0.5rem;
     box-shadow: 2px 2px 4px rgba(148, 148, 148, 0.2);
-    
 }
-.yarn-calculations {
+.optHalf {
+    width: 3rem;
+}
+.optLong {
+    max-width: 100%;
+    width: 30rem;
+    margin-left: 1rem;
+}
+.optDouble {
+    max-width: 100%;
+    width: 8rem;
+    margin:auto 0.2rem;
+    padding-left: 0.2rem;
+}
+select.optDouble, .createForm textarea, input  {
+    font-family: Rubik, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+}
+.yarnCalculations {
     grid-column: 1 / span 2;
     padding: 1rem 0.5rem;
 }
-.yarn-calculations p.span2 {
+.yarnCalculations p.span2 {
     text-align: unset;    
 }
- .project-meta, .project-meta-link {
+ .projectMeta, .projectMetaLink {
     position: absolute;
     top: 0.25rem;
     right: 0.25rem;
@@ -119,14 +152,14 @@
     padding-bottom: 0.5rem;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
  }
- .project-meta-link {
+ .projectMetaLink {
     width: 100px;
     height: 2rem;
     text-align: center;
     line-height: 2rem;
  }
 
-.btn-warping-toggle, .btn-warping-toggle-inactive {
+.btnWarpingToggle, .btnWarpingToggleInactive {
     padding: 4px 8px;
     border: 1px solid #000;
     cursor: pointer;
@@ -134,23 +167,23 @@
     background: #fff;
     box-shadow: unset;
 }
-.btn-warping-toggle-inactive {
+.btnWarpingToggleInactive {
     background: #000;
     color: #fff;
     margin-bottom: auto;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
-#update-metrics {
+#updateMetrics {
     grid-column: 1 / span 4;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-.update-metrics-grid input {
+.updateMetricsGrid input {
     border-width: 1px;
     border-radius: 0.2rem;
     background-color: #eeeeee
 }
-.submit-btn {
+.submitBtn {
     margin-top: 0.3em;
     margin-left: 0.3rem;
     border-radius: 0.5rem;
@@ -160,12 +193,12 @@
     padding: 0.1rem;
     font-size: 0.8rem;
 }
-.submit-btn:disabled {
+.submitBtn:disabled {
   /* opacity: 0.8; */
   box-shadow: unset;
   cursor: not-allowed;
 }
-.update-input {
+.updateInput {
     width: 3rem;
     height: 1.8rem;
     margin: 0 auto;
@@ -175,35 +208,35 @@
     font-size: 0.8rem;
     color: red;
 }
-.warping-help {
+.warpingHelp {
     grid-column: 1 / span 2;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.2em;
     align-items: start;
 }
-.warping-boxes-box {
+.warpingBoxesBox {
     grid-row: 1 / span 2;
 }
-.warping-boxes-toggle {
+.warpingBoxesToggle {
     display: flex; 
     gap: 0.5rem;
     margin-bottom: 1rem;
     padding-top: 1rem; 
 }
-.warp-chains-grid {
+.warpChainsGrid {
     grid-column: 2 / 3;
     display: inline-block;
 }
-.chain-control input {
+.chainControl input {
     max-width: 3.5rem;
     text-align:right;
 }
-.chain-count {
+.chainCount {
     display: inline-block;
     font-style: italic;
 }
-.chain-count input {
+.chainCount input {
     max-width: 3.5rem;
     line-height: 1.5rem;
     margin: 0 0.3rem;

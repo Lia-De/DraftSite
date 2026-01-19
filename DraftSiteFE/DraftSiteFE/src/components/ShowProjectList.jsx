@@ -8,7 +8,7 @@ export default function ShowProjectList() {
     return (
         <div>
             <h2>Projektlista</h2>
-            <ul className="project-list">
+            <ul className="projectList">
                 {projectList.map(project => (
                     <li key={project.id}>
                         <h3>

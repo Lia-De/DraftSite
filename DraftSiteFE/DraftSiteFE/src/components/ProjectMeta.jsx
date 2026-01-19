@@ -5,21 +5,21 @@ export default function ProjectMeta({project, showMeta, setUiState}) {
 
     
     return showMeta ? (
-    <div className="project-meta" onClick={() => setUiState(prev => ({...prev, showMeta: false}))}>
-        <p className="meta-status">
+    <div className="projectMeta" onClick={() => setUiState(prev => ({...prev, showMeta: false}))}>
+        <p className="metaStatus">
             Status: {PROJECT_STATUS_LABELS[project.status] ?? "Odefinerat"}</p>
-        <p className="meta-created">
+        <p className="metaCreated">
             Skapat: {formatDate(project.createdAt)}</p>
         {project.lastUpdatedAt && 
-            <p className="meta-updated">
+            <p className="metaUpdated">
                 Uppdaterat: {formatDate(project.lastUpdatedAt)}</p>}
         {project.finishedAt && 
-            <p className="meta-finished">
+            <p className="metaFinished">
                 Färdig: {formatDate(project.finishedAt)}</p>}
     </div>
     ) : 
      (
-    <div className="project-meta-link" 
+    <div className="projectMetaLink" 
       onClick={()=> setUiState(prev => ({...prev, showMeta: !prev.showMeta}))}> 
         visa info 
     </div>

@@ -7,6 +7,7 @@ import { USAGE_TYPES,  FIBRE_TYPES } from '../constants/yarnConstants.js';
 
 export default function YarnInfoShort({ yarn }) {
   const [showInfo, setShowInfo] = useState(false);
+    if (!yarn) return ('');
     return (
         <>
         <p>{yarn.brand}</p>
@@ -18,7 +19,7 @@ export default function YarnInfoShort({ yarn }) {
         <p>{yarn.lengthPerSkeinMeters} m</p>
         <p >Nystan: {yarn.numberOfSkeins}</p>
         
-        <section id="yarn-extended-info">
+        <section id="yarnExtendedInfo">
           {!showInfo && <MdExpandMore size="2rem" className="icon" onClick={() => (setShowInfo(prev => !prev))}/>}
           {showInfo && 
           (

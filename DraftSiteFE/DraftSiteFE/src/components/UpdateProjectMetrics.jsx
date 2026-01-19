@@ -16,14 +16,14 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
         };
         const value = watch(fieldName);
         return (
-            <div className="update-metrics-grid">
+            <div className="updateMetricsGrid">
             <form onSubmit={handleSubmit(submit)}>
                 <input
                 type="number"
-                className="update-input"
+                className="updateInput"
                 {...register(fieldName, {min: {value: 1, message: "Måste vara positivt"}})}
                 />
-                <button type="submit" className="submit-btn"  disabled={!value}>
+                <button type="submit" className="submitBtn"  disabled={!value}>
                     <GrEdit />
                     <span>{label}</span>
                     </button>

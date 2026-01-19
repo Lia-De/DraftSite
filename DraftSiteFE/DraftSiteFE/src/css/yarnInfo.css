@@ -1,8 +1,8 @@
-#yarn-extended-info {
+#yarnExtendedInfo {
     grid-column: 1/span 3;
     margin: 0;
 }
 
-#yarn-extended-info p {
+#yarnExtendedInfo p {
     text-align: left;
 }

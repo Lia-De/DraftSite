@@ -4,11 +4,11 @@ export default function WarpChains({totalEnds}) {
   const [chainCount, setChainCount] = useState(4);
 
   return (
-    <div className="warp-chains-grid">
+    <div className="warpChainsGrid">
       <h4>Varpkedjor</h4>
 
       {/* User input */}
-      <div className="chain-control">
+      <div className="chainControl">
         <label>
           Antal kedjor: <input
             type="number"
@@ -23,7 +23,7 @@ export default function WarpChains({totalEnds}) {
 
       {/* Generated chains */}
       {Array.from({ length: chainCount }).map((_, index) => (
-        <div className="chain-count" key={index}>
+        <div className="chainCount" key={index}>
           <p>
             Kedja {index + 1}:{" "}
             <input

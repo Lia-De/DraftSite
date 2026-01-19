@@ -108,8 +108,8 @@ export default function Home() {
 
 
 return (
-    <div className="home-container">
-        <h1 className="headerfont-bold">
+    <div className="homeContainer">
+        <h1 className="headerfontBold">
             Lias <img src={logo} alt="logo" height="36px" /> Vävnota
             </h1>
         {uiState.loadingError && <p style={{color: 'red'}}>Error: {uiState.loadingError}</p>}
@@ -134,20 +134,20 @@ return (
  
  {/* Buttons to select expanded information */}
          <section>  
-            {projectList && projectList.length>0 && <button className="btn-toggle" 
+            {projectList && projectList.length>0 && <button className="btnToggle" 
             onClick={() => setUiState(prev => ({...prev, projectListView: !prev.projectListView}))}>
                 {uiState.projectListView 
                 ? (<> <MdExpandLess className="icon"  />Dölj projektlista </>) 
                 : (<> <MdExpandMore className="icon" /> Visa projektlista </>)}
             </button>}
-             {yarnList && yarnList.length>0 && <button className="btn-toggle"
+             {yarnList && yarnList.length>0 && <button className="btnToggle"
                 onClick={() => setUiState(prev => ({...prev, yarnListView: !prev.yarnListView}))}>
                 {uiState.yarnListView 
                 ? (<> <MdExpandLess className="icon" />Dölj Garnlista </>) 
                 : (<> <MdExpandMore className="icon" /> Visa Garnlista </>)                }
             </button>}
 
-            <button className="btn-toggle" onClick={() => setUiState(prev => ({...prev, adminView: !prev.adminView}))}>
+            <button className="btnToggle" onClick={() => setUiState(prev => ({...prev, adminView: !prev.adminView}))}>
             {uiState.adminView 
             ? (<><MdExpandLess className="icon" /> Stäng admin vy</>) 
             : (<><MdExpandMore className="icon" /> Visa admin vy</>)}

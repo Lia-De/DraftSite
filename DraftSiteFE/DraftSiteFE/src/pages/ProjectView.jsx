@@ -11,15 +11,13 @@ import ShowYarnList from "../components/ShowYarnList.jsx";
 import UpdateProjectMetrics from "../components/UpdateProjectMetrics.jsx";
 import { MdInfoOutline } from "react-icons/md";
 import { getById } from "../services/APICalls.js";
-import { defaultYarn } from "../constants/yarnConstants.js";
-
 
 export default function ProjectView() {
     const { projectId } = useParams();
     const [project, setProject] = useState(null);
 
-    const [warp, setWarp] = useState({...defaultYarn});
-    const [weft, setWeft] = useState({...defaultYarn});
+    const [warp, setWarp] = useState(null);
+    const [weft, setWeft] = useState(null);
     
     const [uiState, setUiState] = useState({
         isLoading: false,
@@ -93,26 +91,26 @@ export default function ProjectView() {
       <Link to="/"><RiExpandLeftFill /> Tillbaka </Link>
 
 
-    <section id="project-detail">
+    <section id="projectDetail">
       <h2>{project.name}</h2>
       <p className="desc">{project.description || "—"}</p>
       
       <ProjectMeta project={project} showMeta={uiState.showMeta} setUiState={setUiState} />     
 
-      <div className="yarn-metrics-warp">
+      <div className="yarnMetricsWarp">
         <h2>Varpgarn</h2>
-        <YarnInfoShort yarn={warp} />
+      <YarnInfoShort yarn={warp} />
       </div>
       
-      <div className="yarn-metrics-weft">
+      <div className="yarnMetricsWeft">
         <h2>Inslagsgarn {uiState.warpAsWeft && 
           (<MdInfoOutline className="icon" title="Varpgarn används även som inslag" />)}
         </h2>
         <YarnInfoShort yarn={weft} />
       </div>
-      <div className="yarn-calculations">
+      <div className="yarnCalculations">
 
-        <div id="warp-metrics-grid">
+        <div id="warpMetricsGrid" >
           <p>Vävbredd (cm)</p>
           <p>EPC </p>
           <p>Längd (m)</p>
@@ -153,7 +151,7 @@ export default function ProjectView() {
       <EndsBoxes totalEnds={project?.totalEndsInWarp ?? 0} />
 
     </section>
-    <section className="page-break">
+    <section className="pageBreak">
       <h3>Garn i projektet</h3>
 
       <ShowYarnList yarnList={project.yarns} />

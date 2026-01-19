@@ -16,8 +16,8 @@ export default function EndsBoxes({
   const remainderBoxes = remainder > 0 ? Math.floor(remainder/2) : 0;
 
   return (
-    <div className="warping-help">
-    <div className="warping-boxes-box">
+    <div className="warpingHelp">
+    <div className="warpingBoxesBox">
       {/* Legend */}
       <div
         style={{
@@ -94,9 +94,9 @@ export default function EndsBoxes({
     </div>
 
       {/* Toggle */}
-      <div className="warping-boxes-toggle" >
+      <div className="warpingBoxesToggle" >
         {warpingGroupOptions.map((size) => (
-          <button className={groupSize === size ?"btn-warping-toggle":"btn-warping-toggle-inactive"}
+          <button className={groupSize === size ?"btnWarpingToggle":"btnWarpingToggleInactive"}
           key={size}
           onClick={() => setGroupSize(size)}
           >

@@ -44,6 +44,7 @@ namespace DraftSiteBE.Controllers
         public async Task<ActionResult<LoomProject>> Create([FromBody] LoomProjectCreateDto dto)
         {
             if (dto == null) return BadRequest("Project body required.");
+            if (dto.Yarns == null) return BadRequest("Projects need at least one Yarn");
 
             var errors = new List<string>();
 
