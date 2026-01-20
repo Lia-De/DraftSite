@@ -93,9 +93,9 @@ export default function ProjectView() {
 
 
     <section id="projectDetail">
-      {/* <h2>{project.name}</h2> */}
+      <h2 className="visuallyHidden">{project.name}</h2>
       <UpdateProjectInfo project={project} setUiState={setUiState} name={true}/>
-      {/* <p className="desc">{project.description || "—"}</p> */}
+      
       <UpdateProjectInfo project={project} setUiState={setUiState} description={true}/>
       
       <ProjectMeta project={project} showMeta={uiState.showMeta} setUiState={setUiState} />     
