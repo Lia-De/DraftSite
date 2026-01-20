@@ -4,15 +4,15 @@ import { GrEdit } from "react-icons/gr";
 
 export default function UpdateProjectMetrics ({project, setUiState, warp}) {
        
-    function MetricForm({ label, fieldName, projectId, onSubmit }) {
-        const { register, handleSubmit, reset, watch,  formState: { errors } } = useForm();
-
+    function MetricForm({ label, fieldName, defaultValue, projectId, onSubmit }) {
+        const { register, handleSubmit, reset, watch, formState: { errors, isDirty }} = 
+            useForm({ defaultValues: { [fieldName]: defaultValue } });
         const submit = (data) => {
             onSubmit({
-            projectId,
-            [fieldName]: data[fieldName],
+                projectId,
+                [fieldName]: data[fieldName],
             });
-            reset();
+             reset({ [fieldName]: data[fieldName] });
         };
         const value = watch(fieldName);
         return (
@@ -20,12 +20,11 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
             <form onSubmit={handleSubmit(submit)}>
                 <input
                 type="number"
-                className="updateInput"
+                className="updateInput opt"
                 {...register(fieldName, {min: {value: 1, message: "Måste vara positivt"}})}
                 />
-                <button type="submit" className="submitBtn"  disabled={!value}>
+                <button type="submit" className="submitBtn"  disabled={!isDirty}>
                     <GrEdit />
-                    <span>{label}</span>
                     </button>
                 
                 {errors[fieldName] && (
@@ -57,6 +56,7 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
         <MetricForm
         label="Bredd"
         fieldName="weavingWidthCm"
+        defaultValue={project.widthInput ? project.weavingWidthCm : project.effectiveWeavingWidthCm}
         projectId={project.id}
         onSubmit={handleMetricSubmit}
         />
@@ -64,6 +64,7 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
         <MetricForm
         label="EPC"
         fieldName="endsPerCm"
+        defaultValue={project.endsPerCm}
         projectId={project.id}
         onSubmit={handleMetricSubmit}
         />
@@ -71,6 +72,7 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
         <MetricForm
         label="Längd"
         fieldName="warpLengthMeters"
+        defaultValue={project.warpLengthMeters}
         projectId={project.id}
         onSubmit={handleMetricSubmit}
         />
@@ -78,6 +80,7 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
         <MetricForm
         label="Trådar"
         fieldName="inputEndsInWarp"
+        defaultValue={project.totalEndsInWarp}
         projectId={project.id}
         onSubmit={handleMetricSubmit}
         />
@@ -89,6 +92,7 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
         <MetricForm
             label="PPC"
             fieldName="picksPerCm"
+            defaultValue={project.picksPerCm}
             projectId={project.id}
             onSubmit={handleMetricSubmit}
         />

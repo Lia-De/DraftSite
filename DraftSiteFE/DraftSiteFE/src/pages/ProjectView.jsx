@@ -120,32 +120,30 @@ export default function ProjectView() {
           <p>Längd (m)</p>
           <p>Trådar</p>
 
-          <p className="opt">{project.widthInput ? project.weavingWidthCm : project.effectiveWeavingWidthCm} </p>
+          {/* <p className="opt">{project.widthInput ? project.weavingWidthCm : project.effectiveWeavingWidthCm} </p>
           <p className="opt">{project.endsPerCm}</p>
           <p className="opt">{project.warpLengthMeters} </p>
-          <p className="opt">{project.totalEndsInWarp}</p>
+          <p className="opt">{project.totalEndsInWarp}</p> */}
 
           <UpdateProjectMetrics project={project} setUiState={setUiState} warp={true}/>
 
-          <p className="span2"></p>
-          <p>Åtgång varp (m)</p>
+          <p className="col3">Åtgång varp (m)</p>
           <p>Åtgång nystan</p>
 
-          <p className="span2"> </p>
-          <p className="opt">{project.totalWarpLengthMeters} </p>
+          <p className="col3 opt">{project.totalWarpLengthMeters} </p>
           <p className="opt">{(project?.totalWarpLengthMeters / warp?.lengthPerSkeinMeters).toFixed(2)}</p>
 
-          <p> </p>
-          <p> PPC </p>
+          
+          <p className="col2"> PPC </p>
           <p>Åtgång inslag (m)</p>
           <p>Åtgång nystan</p>
 
-          <p>  </p>
-          <p className="opt">{project.picksPerCm}</p>
+          
+          {/* <p className="opt">{project.picksPerCm}</p> */}
+          <UpdateProjectMetrics project={project} setUiState={setUiState} warp={false}/>
           <p className="opt">{project.totalWeftLengthMeters} </p>
           <p className="opt"> {(project?.totalWeftLengthMeters / weft?.lengthPerSkeinMeters).toFixed(2) } </p>
 
-          <UpdateProjectMetrics project={project} setUiState={setUiState} warp={false}/>
 
         </div>  
       </div>
