@@ -1,3 +1,4 @@
+using DraftSiteBE.Models;
 using System;
 
 namespace DraftSiteBE.DTOs
@@ -13,5 +14,9 @@ namespace DraftSiteBE.DTOs
         public double? PicksPerCm { get; set; }        // new picks (weft) per cm
         public int? InputEndsInWarp { get; set; }      // new total ends in the warp (if user supplies total ends)
         public double? WarpLengthMeters { get; set; } // New: allow updating the planned warp length (meters)
+
+        public string? Name { get; set; }               // New: allow updating the project name
+        public string? Description { get; set; }        // New: allow updating the project
+        public List<WarpChain>? WarpChains { get; set; } // New: allow updating the warp chains
     }
 }

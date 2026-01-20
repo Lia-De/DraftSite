@@ -26,8 +26,8 @@ a {
   text-decoration: none;
 }
 a:hover {
-  color: #2d5f5f;
-  text-decoration: none;
+  /* color: #2d5f5f; */
+  text-decoration: underline;
 } 
 
 /*  Site Fonts

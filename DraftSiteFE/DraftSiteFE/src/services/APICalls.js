@@ -1,24 +1,26 @@
+import axios from 'axios';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // GET requests
 export const getAll = async (endpoint) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/${endpoint}`);
-        if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
-        return await response.json();
+        const response = await axios.get(`${API_BASE_URL}/${endpoint}`);
+        return response.data;
     } catch (error) {
-        console.error('GET Error:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+        console.error('GET Error:', errorMessage);
         throw error;
     }
 };
 
 export const getById = async (endpoint, id) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/${endpoint}/${id}`);
-        if (!response.ok) throw new Error(`Failed to fetch ${endpoint}/${id}`);
-        return await response.json();
+        const response = await axios.get(`${API_BASE_URL}/${endpoint}/${id}`);
+        return response.data;
     } catch (error) {
-        console.error('GET Error:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+        console.error('GET Error:', errorMessage);
         throw error;
     }
 };
@@ -26,15 +28,11 @@ export const getById = async (endpoint, id) => {
 // POST request (Create)
 export const create = async (endpoint, data) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) throw new Error(`Failed to create ${endpoint}`);
-        return await response.json();
+        const response = await axios.post(`${API_BASE_URL}/${endpoint}`, data);
+        return response.data;
     } catch (error) {
-        console.error('POST Error:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+        console.error('POST Error:', errorMessage);
         throw error;
     }
 };
@@ -42,15 +40,11 @@ export const create = async (endpoint, data) => {
 // PATCH request (Update)
 export const update = async (endpoint, data) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
-        if (!response.ok) throw new Error(`Failed to update ${endpoint}`);
-        return await response.json();
+        const response = await axios.patch(`${API_BASE_URL}/${endpoint}`, data);
+        return response.data;
     } catch (error) {
-        console.error('PUT Error:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+        console.error('PATCH Error:', errorMessage);
         throw error;
     }
 };
@@ -58,13 +52,11 @@ export const update = async (endpoint, data) => {
 // DELETE request
 export const deleteItem = async (endpoint, id) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/${endpoint}/${id}`, {
-            method: 'DELETE',
-        });
-        if (!response.ok) throw new Error(`Failed to delete ${endpoint}/${id}`);
-        return await response.json();
+        const response = await axios.delete(`${API_BASE_URL}/${endpoint}/${id}`);
+        return response.data;
     } catch (error) {
-        console.error('DELETE Error:', error);
+        const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+        console.error('DELETE Error:', errorMessage);
         throw error;
     }
 };

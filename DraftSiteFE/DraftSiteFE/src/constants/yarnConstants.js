@@ -15,7 +15,6 @@ export const FIBRE_TYPES = [
   { value: 6, label: "Övrigt" }
 ];
 export const defaultYarn = {
-        id: "",
         usageType: 0,
         brand: "",
         color: "",
@@ -25,11 +24,8 @@ export const defaultYarn = {
         ply: "",
         thicknessNM: "",
         notes: "",
-        weightPerSkeinGrams: null,
+        weightPerSkeinGrams: 100,
         lengthPerSkeinMeters: null,
-        numberOfSkeins: null,
+        numberOfSkeins: 1,
         pricePerSkein: null,
-        totalWeightGrams: null,
-        totalLengthMeters: null,
-        totalPrice: null
     }

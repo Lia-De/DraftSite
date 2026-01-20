@@ -50,7 +50,7 @@ select.optDouble, .createForm textarea, input  {
 
 .yarnMetricsWarp {
     grid-column: 1 / span 2;
-    padding: 1.5rem 0;
+    padding: 0.5rem 0;
     border: 1px dotted #ccc;
     margin: 1rem 0 0 0;
 }
@@ -84,4 +84,16 @@ select.optDouble, .createForm textarea, input  {
 }
 .warpMetricsGrid > label {
     text-align:center;
+}
+
+.createForm>button {
+    border: 1px dotted #ccc;
+    cursor: not-allowed;
+}
+.btnCreate{
+    font-size: 1.5rem;
+    padding: 1rem 2rem;
+    color: #489999;
+    cursor: pointer !important;
+    border: 1px solid #489999 !important;
 }

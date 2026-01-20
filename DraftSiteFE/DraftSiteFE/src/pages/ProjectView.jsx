@@ -9,6 +9,7 @@ import ProjectMeta from "../components/ProjectMeta.jsx";
 import YarnInfoShort from "../components/YarnInfoShort.jsx";
 import ShowYarnList from "../components/ShowYarnList.jsx";
 import UpdateProjectMetrics from "../components/UpdateProjectMetrics.jsx";
+import UpdateProjectInfo from "../components/UpdateProjectInfo.jsx";
 import { MdInfoOutline } from "react-icons/md";
 import { getById } from "../services/APICalls.js";
 
@@ -92,8 +93,10 @@ export default function ProjectView() {
 
 
     <section id="projectDetail">
-      <h2>{project.name}</h2>
-      <p className="desc">{project.description || "—"}</p>
+      {/* <h2>{project.name}</h2> */}
+      <UpdateProjectInfo project={project} setUiState={setUiState} name={true}/>
+      {/* <p className="desc">{project.description || "—"}</p> */}
+      <UpdateProjectInfo project={project} setUiState={setUiState} description={true}/>
       
       <ProjectMeta project={project} showMeta={uiState.showMeta} setUiState={setUiState} />     
 
@@ -106,8 +109,9 @@ export default function ProjectView() {
         <h2>Inslagsgarn {uiState.warpAsWeft && 
           (<MdInfoOutline className="icon" title="Varpgarn används även som inslag" />)}
         </h2>
-        <YarnInfoShort yarn={weft} />
+        <YarnInfoShort yarn={weft} warpAsWeft={uiState.warpAsWeft} />
       </div>
+
       <div className="yarnCalculations">
 
         <div id="warpMetricsGrid" >

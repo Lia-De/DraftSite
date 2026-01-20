@@ -6,7 +6,7 @@ import { MdAddCircleOutline } from "react-icons/md";
 import styles from "./LoomProjectForm.module.css";
 
 export default function LoomProjectForm({ onSubmit }) {
-  const { register, control, watch, handleSubmit, formState: { errors } } = useForm({
+  const { register, control, watch, handleSubmit, formState: { errors, isValid } } = useForm({mode:"onChange",
     defaultValues: {
       name: null,
       description: null,
@@ -20,21 +20,21 @@ export default function LoomProjectForm({ onSubmit }) {
       yarns: [
         {...defaultYarn}
       ],
-      warpChains: [
-        {
-          id: "",
-          name: "",
-          order: null,
-          crossCount: null,
-          loomProjectId: "",
-          yarnId: "",
-          ends: null,
-          warpLength: null,
-          notes: "",
-          totalLengthMeters: null,
-          skeinsNeeded: null
-        }
-      ]
+      // warpChains: [
+      //   {
+      //     id: "",
+      //     name: "",
+      //     order: null,
+      //     crossCount: null,
+      //     loomProjectId: "",
+      //     yarnId: "",
+      //     ends: null,
+      //     warpLength: null,
+      //     notes: "",
+      //     totalLengthMeters: null,
+      //     skeinsNeeded: null
+      //   }
+      // ]
     }
   });
 
@@ -102,7 +102,9 @@ export default function LoomProjectForm({ onSubmit }) {
 
       <label className="span2">
         <h2>Projektnamn</h2>
-        <input className={styles.optLong} placeholder="* Projektnamn" {...register("name", {required: true})} />
+        <input className={styles.optLong} 
+        placeholder="* Projektnamn" {...register("name", {required: true})} />
+        {errors?.name && <p className="error">Projektnamn är obligatoriskt</p>}
       </label>
 
       <label className="span2">
@@ -123,7 +125,7 @@ export default function LoomProjectForm({ onSubmit }) {
           <input className={styles.optLong} {...register(`yarns.${index}.brand`)} />
         </label>
         <label>
-          Nm (tjocklek/trådar) <br />
+          * Nm (tjocklek/trådar) <br />
           <input className={styles.optHalf} type="number" 
           {...register(`yarns.${index}.thicknessNM`, { valueAsNumber: true ,
             required: "Tjocklek (Nm) är obligatoriskt",
@@ -134,6 +136,13 @@ export default function LoomProjectForm({ onSubmit }) {
             required: "Trådantal (Nm) är obligatoriskt",
             min: { value: 1, message: "Trådar måste vara större än 0" }
           })} />
+        {/* Error messages */}
+        {errors?.yarns?.[index]?.thicknessNM && (
+          <p className="error"> {errors.yarns[index].thicknessNM.message}</p>
+        )}
+        {errors?.yarns?.[index]?.ply && (
+          <p className="error">{errors.yarns[index].ply.message}</p>
+        )}
         </label>
         <label>
           Färg <br />
@@ -143,51 +152,40 @@ export default function LoomProjectForm({ onSubmit }) {
           Färgkod <br />
           <input className={`opt ${styles.opt}`} {...register(`yarns.${index}.colorCode`)} />
         </label>
-        {/* Error messages */}
-        {errors?.yarns?.[index]?.thicknessNM && (
-          <p className="error">
-            {errors.yarns[index].thicknessNM.message}
-          </p>
-        )}
-
-        {errors?.yarns?.[index]?.ply && (
-          <p className="error">
-            {errors.yarns[index].ply.message}
-          </p>
-        )}
         <span className={styles.yarnEntry}>
         <h4>Nystan</h4>
         <label>
-          Vikt (g)
+         * Vikt (g)
           <input className={`opt ${styles.opt}`} type="number" 
           {...register(`yarns.${index}.weightPerSkeinGrams`, { valueAsNumber: true ,
             required: "Vikt är obligatoriskt",
             min: { value: 1, message: "Vikt måste vara större än 0" }
           })} />
+          {errors?.yarns?.[index]?.weightPerSkeinGrams && (
+            <p className="error">
+              {errors.yarns[index].weightPerSkeinGrams.message}
+            </p>
+          )}
         </label>
         <label>
-          Längd (m)
+         * Längd (m)
           <input className={`opt ${styles.opt}`} type="number" 
           {...register(`yarns.${index}.lengthPerSkeinMeters`, { valueAsNumber: true ,
             required: "Längd är obligatoriskt",
             min: { value: 1, message: "Längd måste vara större än 0" }
           })} />
-        </label>
-        <label>
-          Pris
-          <input className={`opt ${styles.opt}`} type="number" {...register(`yarns.${index}.pricePerSkein`, { valueAsNumber: true })} />
-        </label>
-          {/* Error messages */}
-        {errors?.yarns?.[index]?.weightPerSkeinGrams && (
-          <p className="error">
-            {errors.yarns[index].weightPerSkeinGrams.message}
-          </p>
-        )}
         {errors?.yarns?.[index]?.lengthPerSkeinMeters && (
           <p className="error">
             {errors.yarns[index].lengthPerSkeinMeters.message}
           </p>
         )}
+        </label>
+        <label>
+          Pris
+          <input className={`opt ${styles.opt}`} type="number" 
+            {...register(`yarns.${index}.pricePerSkein`, { valueAsNumber: true })} />
+        </label>
+          
 
         <label className="col1">
         Fiber:&nbsp;
@@ -219,18 +217,18 @@ export default function LoomProjectForm({ onSubmit }) {
         </select>
         </label>
         <label>
-          Nystan: 
+         * Nystan: 
           <input className={styles.optHalf} type="number" 
             {...register(`yarns.${index}.numberOfSkeins`, { valueAsNumber: true,
+              required: "Lägg till minst 1 nystan",
                min: { value: 1, message: "Antal nystan måste vara 1 eller mer" }
              })} />
+          {errors?.yarns?.[index]?.numberOfSkeins && (
+            <p className="error">
+              {errors.yarns[index].numberOfSkeins.message}
+            </p>
+          )}
         </label>
-        {/* errors */}
-        {errors?.yarns?.[index]?.numberOfSkeins && (
-          <p className="error col3">
-            {errors.yarns[index].numberOfSkeins.message}
-          </p>
-        )}
         </span>
         <label className="span3">
           Anteckning
@@ -244,49 +242,45 @@ export default function LoomProjectForm({ onSubmit }) {
     <button className="col2" type="button" onClick={() => appendYarn({...defaultYarn})}>
       <MdAddCircleOutline  /> Lägg till garn
     </button>
+    {!isValid && yarnFields.length === 0 &&
+    <p className="error">Fyll i minst 1 garn för att registrera projektet.</p>}
 
       </div>
       
           <div className={styles.warpMetricsGrid}>
             <h2>Varputräkning</h2>
 
-          <label className="col1"> Vävbredd (cm)
+          <label className="col1">* Vävbredd (cm)
             <input className={`opt ${styles.opt}`} type="number" 
             {...register("weavingWidthCm", { valueAsNumber: true,
               required: "Vävbredd är obligatoriskt",
               min: { value: 1, message: "Vävbredd måste vara större än 0" }
              })} />
+            {errors.weavingWidthCm && (
+              <p className="error"> {errors.weavingWidthCm.message} </p>
+            )}
              </label>
-          <label>EPC <br />
+          <label>* EPC (trådar/cm) <br />
           <input className={`opt ${styles.opt}`} type="number" {...register("endsPerCm", { valueAsNumber: true,
             required: "EPC är obligatoriskt",
             min: { value: 1, message: "EPC måste vara större än 0" }
            })} />
+           {errors.endsPerCm && (
+             <p className="error"> {errors.endsPerCm.message} </p>
+           )}
            </label>
-           <label>Längd (m) <br />
-          <input className={`opt ${styles.opt}`} type="number" {...register("warpLengthMeters", { valueAsNumber: true,
-            required: "Längd är obligatoriskt",
-            min: { value: 1, message: "Längd måste vara större än 0" }
-           })} /></label>
+           <label>* Längd (m) <br />
+            <input className={`opt ${styles.opt}`} type="number" {...register("warpLengthMeters", { valueAsNumber: true,
+              required: "Längd är obligatoriskt",
+              min: { value: 1, message: "Längd måste vara större än 0" }
+            })} />
+          {errors.warpLengthMeters && (
+            <p className="error col3"> {errors.warpLengthMeters.message} </p>
+          )}
+           </label>
           <label>Trådar  <br />
           <p className="col4">{totalEnds ? totalEnds : '-'}</p>
           </label>
-          {/* Error messages */}
-          {errors.weavingWidthCm && (
-            <p className="error col1">
-              {errors.weavingWidthCm.message}
-            </p>
-          )}
-          {errors.endsPerCm && (
-            <p className="error col2">
-              {errors.endsPerCm.message}
-            </p>
-          )}
-          {errors.warpLengthMeters && (
-            <p className="error col3">
-              {errors.warpLengthMeters.message}
-            </p>
-          )}
           
           <p className="col3">Åtgång varp (m)</p>
           <p className="col4">Åtgång nystan</p>
@@ -298,31 +292,23 @@ export default function LoomProjectForm({ onSubmit }) {
           <p className="col3">Åtgång inslag (m)</p>
           <p>Åtgång nystan</p>
           
-          <label className="col2">PPC:&nbsp; 
+          <label className="span2" style={{textAlign:"right"}}>* Inslag/cm&nbsp; 
           <input className={`opt ${styles.opt}`} type="number" 
             {...register("picksPerCm", { valueAsNumber: true,
               required: "Inslag per cm (PPC) är obligatoriskt",
               min: { value: 1, message: "Inslag per cm (PPC) måste vara större än 0" }
              })} />
+          {errors.picksPerCm && (
+            <p className="error col2"> {errors.picksPerCm.message} </p>
+          )}
           </label>
           <p className="col3">{uiLabel.totalWeftLength ? uiLabel.totalWeftLength : '-' }</p>
           <p className="col4">{uiLabel.weftSkeins ? uiLabel.weftSkeins : '-'}</p>
-          {/* Error messages */}
-          {errors.picksPerCm && (
-            <p className="error col2">
-              {errors.picksPerCm.message}
-            </p>
-          )}
+
         </div>  
-    </section>
- 
-
-
-
-
       {/* Tags */}
-      <div>
-        <h3>Tags</h3>
+      <div className={styles.yarnMetricsWarp}>
+        <h2>Tags</h2>
         {tagFields.map((tag, index) => (
           <div key={tag.id}>
             <input {...register(`tags.${index}`)} />
@@ -331,9 +317,10 @@ export default function LoomProjectForm({ onSubmit }) {
         ))}
         <button type="button" onClick={() => appendTag("")}>Add Tag</button>
       </div>
+    </section>
 
       {/* Warp Chains */}
-      <div>
+      {/* <div>
         <h3>Warp Chains</h3>
         {chainFields.map((chain, index) => (
           <div key={chain.id}>
@@ -378,9 +365,9 @@ export default function LoomProjectForm({ onSubmit }) {
             skeinsNeeded: null
           })
         }>Add Warp Chain</button>
-      </div>
+      </div> */}
 
-      <button type="submit">Create Project</button>
+      <button className={isValid? styles.btnCreate: ''} type="submit">Create Project</button>
     </form>
   );
 }

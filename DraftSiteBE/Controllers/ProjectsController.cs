@@ -165,6 +165,18 @@ namespace DraftSiteBE.Controllers
             var errors = new List<string>();
             var anyChange = false;
 
+            // Update name/description if provided
+            if (!string.IsNullOrWhiteSpace(dto.Name))
+            {
+                project.Name = dto.Name.Trim();
+                anyChange = true;
+            }
+            if (!string.IsNullOrWhiteSpace(dto.Description))
+            {
+                project.Description = dto.Description.Trim();
+                anyChange = true;
+            }
+
             if (dto.WeavingWidthCm.HasValue)
             {
                 if (dto.WeavingWidthCm.Value <= 0m) errors.Add("WeavingWidthCm must be > 0.");
