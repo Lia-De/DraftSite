@@ -14,18 +14,18 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
             });
              reset({ [fieldName]: data[fieldName] });
         };
-        const value = watch(fieldName);
+        // const value = watch(fieldName);
         return (
             <div className="updateMetricsGrid">
             <form onSubmit={handleSubmit(submit)}>
                 <input
-                type="number"
-                className="updateInput opt"
-                {...register(fieldName, {min: {value: 1, message: "Måste vara positivt"}})}
+                    type="number"
+                    className="updateInput opt"
+                    {...register(fieldName, {min: {value: 1, message: "Måste vara positivt"}})}
                 />
-                <button type="submit" className="submitBtn"  disabled={!isDirty}>
+                <button type="submit" className="submitBtn printHidden"  disabled={!isDirty}>
                     <GrEdit />
-                    </button>
+                </button>
                 
                 {errors[fieldName] && (
                 <p className="error">

@@ -40,6 +40,7 @@ namespace DraftSiteBE.Controllers
 
         // POST api/projects
         // Accept a DTO so we control what input is required and how it maps to the LoomProject model.
+        // Will not add a warp chain on creation
         [HttpPost]
         public async Task<ActionResult<LoomProject>> Create([FromBody] LoomProjectCreateDto dto)
         {
@@ -77,7 +78,7 @@ namespace DraftSiteBE.Controllers
             };
 
             // Tags: DTO provides list of strings -> create Tag objects
-            if (dto.Tags != null && dto.Tags.Any())
+            if (dto.Tags != null && dto.Tags.Count != 0)
             {
                 project.Tags = dto.Tags
                     .Where(t => !string.IsNullOrWhiteSpace(t))
@@ -87,7 +88,7 @@ namespace DraftSiteBE.Controllers
 
             // Validate and prepare inline yarns
             var inlineYarnIds = new HashSet<Guid>();
-            if (dto.Yarns != null && dto.Yarns.Any())
+            if (dto.Yarns != null && dto.Yarns.Count != 0)
             {
                 project.Yarns = new List<Yarn>();
                 foreach (var y in dto.Yarns)
@@ -104,30 +105,6 @@ namespace DraftSiteBE.Controllers
 
                     project.Yarns.Add(y);
                     inlineYarnIds.Add(y.Id);
-                }
-            }
-
-            // Validate and prepare warp chains
-            if (dto.WarpChains != null && dto.WarpChains.Any())
-            {
-                project.WarpChains = new List<WarpChain>();
-                foreach (var w in dto.WarpChains)
-                {
-                    if (w == null) continue;
-                    if (w.Id == Guid.Empty) w.Id = Guid.NewGuid();
-                    // set LoomProjectId now so EF will track relationship
-                    w.LoomProjectId = project.Id;
-
-                    if (w.Ends <= 0) errors.Add($"WarpChain {w.Id}: Ends must be > 0.");
-                    if (w.WarpLength <= 0) errors.Add($"WarpChain {w.Id}: WarpLength must be > 0.");
-
-                    if (w.YarnId.HasValue && !inlineYarnIds.Contains(w.YarnId.Value))
-                    {
-                        var yarnExists = await _db.Yarns.AnyAsync(y => y.Id == w.YarnId.Value);
-                        if (!yarnExists) errors.Add($"WarpChain {w.Id}: referenced Yarn {w.YarnId} does not exist.");
-                    }
-
-                    project.WarpChains.Add(w);
                 }
             }
 

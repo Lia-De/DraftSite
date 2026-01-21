@@ -19,22 +19,7 @@ export default function LoomProjectForm({ onSubmit }) {
       tags: [""],
       yarns: [
         {...defaultYarn}
-      ],
-      // warpChains: [
-      //   {
-      //     id: "",
-      //     name: "",
-      //     order: null,
-      //     crossCount: null,
-      //     loomProjectId: "",
-      //     yarnId: "",
-      //     ends: null,
-      //     warpLength: null,
-      //     notes: "",
-      //     totalLengthMeters: null,
-      //     skeinsNeeded: null
-      //   }
-      // ]
+      ]
     }
   });
 
@@ -318,54 +303,6 @@ export default function LoomProjectForm({ onSubmit }) {
         <button type="button" onClick={() => appendTag("")}>Add Tag</button>
       </div>
     </section>
-
-      {/* Warp Chains */}
-      {/* <div>
-        <h3>Warp Chains</h3>
-        {chainFields.map((chain, index) => (
-          <div key={chain.id}>
-            <label>
-              Name
-              <input {...register(`warpChains.${index}.name`)} />
-            </label>
-            <label>
-              Order
-              <input type="number" {...register(`warpChains.${index}.order`, { valueAsNumber: true })} />
-            </label>
-            <label>
-              Cross Count
-              <input type="number" {...register(`warpChains.${index}.crossCount`, { valueAsNumber: true })} />
-            </label>
-            <label>
-              Ends
-              <input type="number" {...register(`warpChains.${index}.ends`, { valueAsNumber: true })} />
-            </label>
-            <label>
-              Warp Length
-              <input type="number" {...register(`warpChains.${index}.warpLength`, { valueAsNumber: true })} />
-            </label>
-            <label>
-              Notes
-              <input {...register(`warpChains.${index}.notes`)} />
-            </label>
-            <button type="button" onClick={() => removeChain(index)}>Remove Chain</button>
-          </div>
-        ))}
-        <button type="button" onClick={() =>
-          appendChain({
-            name: "",
-            order: null,
-            crossCount: null,
-            loomProjectId: "",
-            yarnId: "",
-            ends: null,
-            warpLength: null,
-            notes: "",
-            totalLengthMeters: null,
-            skeinsNeeded: null
-          })
-        }>Add Warp Chain</button>
-      </div> */}
 
       <button className={isValid? styles.btnCreate: ''} type="submit">Create Project</button>
     </form>

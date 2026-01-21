@@ -12,10 +12,11 @@ import UpdateProjectMetrics from "../components/UpdateProjectMetrics.jsx";
 import UpdateProjectInfo from "../components/UpdateProjectInfo.jsx";
 import { MdInfoOutline } from "react-icons/md";
 import { getById } from "../services/APICalls.js";
+import { currentProjectAtom } from "../atoms/currentProjectAtom.js";
 
 export default function ProjectView() {
     const { projectId } = useParams();
-    const [project, setProject] = useState(null);
+    const [project, setProject] = useAtom(currentProjectAtom)
 
     const [warp, setWarp] = useState(null);
     const [weft, setWeft] = useState(null);
@@ -89,7 +90,7 @@ export default function ProjectView() {
 
   return (
     <div>
-      <Link to="/"><RiExpandLeftFill /> Tillbaka </Link>
+      <Link to="/" className="printHidden"><RiExpandLeftFill /> Tillbaka </Link>
 
 
     <section id="projectDetail">
@@ -119,17 +120,10 @@ export default function ProjectView() {
           <p>EPC </p>
           <p>Längd (m)</p>
           <p>Trådar</p>
-
-          {/* <p className="opt">{project.widthInput ? project.weavingWidthCm : project.effectiveWeavingWidthCm} </p>
-          <p className="opt">{project.endsPerCm}</p>
-          <p className="opt">{project.warpLengthMeters} </p>
-          <p className="opt">{project.totalEndsInWarp}</p> */}
-
           <UpdateProjectMetrics project={project} setUiState={setUiState} warp={true}/>
 
           <p className="col3">Åtgång varp (m)</p>
           <p>Åtgång nystan</p>
-
           <p className="col3 opt">{project.totalWarpLengthMeters} </p>
           <p className="opt">{(project?.totalWarpLengthMeters / warp?.lengthPerSkeinMeters).toFixed(2)}</p>
 
@@ -137,22 +131,17 @@ export default function ProjectView() {
           <p className="col2"> PPC </p>
           <p>Åtgång inslag (m)</p>
           <p>Åtgång nystan</p>
-
-          
-          {/* <p className="opt">{project.picksPerCm}</p> */}
           <UpdateProjectMetrics project={project} setUiState={setUiState} warp={false}/>
           <p className="opt">{project.totalWeftLengthMeters} </p>
           <p className="opt"> {(project?.totalWeftLengthMeters / weft?.lengthPerSkeinMeters).toFixed(2) } </p>
-
-
         </div>  
+        
       </div>
       <hr />     
       <h3>Varpa - räkning</h3>
-
       <EndsBoxes totalEnds={project?.totalEndsInWarp ?? 0} />
-
     </section>
+
     <section className="pageBreak">
       <h3>Garn i projektet</h3>
 

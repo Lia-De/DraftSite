@@ -16,7 +16,7 @@ namespace DraftSiteBE.Models
         public LoomProject? LoomProject { get; set; }
 
         // Link to the Yarn used for this chain (optional)
-        public Guid? YarnId { get; set; }
+        public Guid YarnId { get; set; }
         public Yarn? Yarn { get; set; }
 
         // Chain specifics
@@ -28,12 +28,12 @@ namespace DraftSiteBE.Models
         public double TotalLengthMeters => Ends * WarpLength;
 
         // How many skeins of the referenced yarn are required for this chain (rounded up)
-        public int SkeinsNeeded
+        public decimal SkeinsNeeded
         {
             get
             {
                 if (Yarn == null || Yarn.LengthPerSkeinMeters <= 0.0) return 0;
-                return (int)Math.Ceiling(TotalLengthMeters / Yarn.LengthPerSkeinMeters);
+                return (decimal)(TotalLengthMeters / Yarn.LengthPerSkeinMeters);
             }
         }
 

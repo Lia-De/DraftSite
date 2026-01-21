@@ -17,11 +17,11 @@ export default function YarnInfoShort({ yarn, warpAsWeft=false }) {
         <p className={warpAsWeft ? "italics" : ""}>{yarn.thicknessNM}/{yarn.ply} Nm</p>
         <p className={warpAsWeft ? "italics" : ""}>{yarn.weightPerSkeinGrams} g</p>
         <p className={warpAsWeft ? "italics" : ""}>{yarn.lengthPerSkeinMeters} m</p>
-        <p className={warpAsWeft ? "italics" : ""}>Nystan: {yarn.numberOfSkeins}</p>
+        <p className={warpAsWeft ? "italics printHidden" : "printHidden"}>Nystan: {yarn.numberOfSkeins}</p>
         
 
         <section id="yarnExtendedInfo">
-          {!showInfo && <MdExpandMore size="2rem" className="icon" onClick={() => (setShowInfo(prev => !prev))}/>}
+          {!showInfo && <MdExpandMore size="2rem" className="icon printHidden" onClick={() => (setShowInfo(prev => !prev))}/>}
           {showInfo && 
           (
             <>

@@ -89,10 +89,10 @@
 
 @media print {
   .projectMetaLink,
-  .updateMetricsGrid,
   .yarnMetricsWeft,
   .warpingBoxesToggle,
-  .chainControl {
+  .chainControl,
+  .printHidden {
     display: none !important;
   }
   body {
@@ -116,5 +116,8 @@
   .pageBreak {
     page-break-before: always; /* legacy */
     break-before: page;        /* modern */
+  }
+  .chainCount input {
+    color: white !important;
   }
 }

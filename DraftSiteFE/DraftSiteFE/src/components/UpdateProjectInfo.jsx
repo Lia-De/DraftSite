@@ -23,7 +23,7 @@ export default function UpdateProjectInfo ({project, setUiState, name=false, des
                     className={name? "updateNameInput" : "updateDescInput desc"}
                 {...register(fieldName, {required: "Fältet är obligatoriskt"})}
                 />
-                <button type="submit" className="submitBtn"  disabled={!isDirty}>
+                <button type="submit" className="submitBtn printHidden"  disabled={!isDirty}>
                     <GrEdit />
                 </button>
                 

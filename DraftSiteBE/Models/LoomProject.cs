@@ -108,7 +108,7 @@ namespace DraftSiteBE.Models
             }
         }
 
-        public int TotalWarpSkeinsNeeded => WarpChains.Sum(w => w.SkeinsNeeded);
+        public decimal TotalWarpSkeinsNeeded => WarpChains.Sum(w => w.SkeinsNeeded);
 
         // incorrect
         public decimal? TotalYarnWeightGrams => Yarns.Sum(y => y.TotalWeightGrams);
