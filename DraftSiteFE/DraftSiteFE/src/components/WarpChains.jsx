@@ -22,6 +22,7 @@ export default function WarpChains({totalEnds}) {
   return (
     <div className="warpChainsGrid">
       {/* User input */}
+      <h3 className="printHidden">Varpflätor</h3>
       <div className="chainControl">
         <label>
           Antal kedjor: <input
@@ -37,11 +38,11 @@ export default function WarpChains({totalEnds}) {
           /> 
         </label>
       </div>
-        {chainCount>1 && <p>Idealt {idealEndsPerChain} trådar på {chainCount} kedjor</p>}
-
+        {/* {chainCount>1 && <p>Idealt {idealEndsPerChain} trådar på {chainCount} kedjor</p>} */}
+        
         <CreateWarpChain 
           projectId={project?.id} 
-          yarnId={(project?.yarns.find((yarn) => yarn.usageType === 0)?.id || null)} 
+          yarnId={warp?.id} 
           projectWarpLength={project?.warpLengthMeters}
           idealEndsPerChain={idealEndsPerChain}
           chainCount={chainCount}

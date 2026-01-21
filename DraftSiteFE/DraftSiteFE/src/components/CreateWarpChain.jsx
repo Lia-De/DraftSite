@@ -7,65 +7,99 @@ export default function CreateWarpChain({projectId,
         projectWarpLength, 
         chainCount, 
         onSubmit}) {
-    const { register, control, watch, handleSubmit, reset, formState: { errors, isValid } } = 
-    useForm({mode:"onChange",
-          defaultValues: []
-}); 
+    const { register, control, handleSubmit, reset, getValues,setValue, 
+            formState: { errors, isValid } 
+            } = useForm({
+                mode: "onChange",
+                defaultValues: {
+                    warpChains: [],
+                    sharedCrossCount: "1x1"
+                }
+            });
     const { fields: chainFields, append: appendChain, remove: removeChain } = 
     useFieldArray({ control, name: "warpChains" });
 
     useEffect(() => {
-  if (!projectId || !yarnId) return;
+        if (!projectId || !yarnId) return;
 
-  reset({
-    warpChains: Array.from({ length: chainCount }, () => ({
-      ends: null,
-      name: "",
-      crossCount: "1x1",
-      loomProjectId: projectId,
-      yarnId: yarnId,
-      warpLength: projectWarpLength ?? null,
-      notes: ""
-    }))
-  });
-}, [projectId, yarnId, chainCount, projectWarpLength, reset]);
+        reset({
+            warpChains: Array.from({ length: chainCount }, () => ({
+            ends: null,
+            name: "",
+            crossCount: "1x1",
+            loomProjectId: projectId,
+            yarnId: yarnId,
+            warpLength: projectWarpLength ?? null,
+            notes: ""
+            }))
+        });
+    }, [projectId, yarnId, chainCount, projectWarpLength, reset]);
+
+    useEffect(() => {
+        // remove ideal ends per chain when it changes
+        const currentValues = getValues("warpChains");
+        currentValues.forEach((chain, index) => {
+            setValue(`warpChains.${index}.ends`, null);
+        });
+    }, [chainCount]);
 
     return (
         <div>
             {/* Warp Chains */}
             <form onSubmit={handleSubmit(onSubmit)}>
-            <h3 className="printHidden">Varpflätor</h3>
+            
             <p>Idealt {idealEndsPerChain} trådar på {chainCount} kedjor
-            <button className="printHidden btnWarpingToggle" 
-            title="Fyll automatiskt i idealantal trådar per kedja"
-                onClick={
-                () => {
-                    
-                    reset({
-                        warpChains: Array.from({ length: chainCount }, () => ({
-                        ends: idealEndsPerChain,
-                        name: "",
-                        crossCount: "1x1",
-                        loomProjectId: projectId,
-                        yarnId: yarnId,
-                        warpLength: projectWarpLength ?? null,
-                        notes: ""
-                        }))
-                    });
-                }
-            }>✓</button></p>
+            <button type="button"
+                className="printHidden btnWarpingToggle"
+                title="Fyll automatiskt i idealantal trådar per kedja"
+                onClick={() => {
+                const crossCount = getValues("sharedCrossCount");
+                reset({
+                    warpChains: Array.from({ length: chainCount }, () => ({
+                    ends: idealEndsPerChain,
+                    name: "",
+                    crossCount: crossCount,
+                    loomProjectId: projectId,   
+                    yarnId: yarnId,
+                    warpLength: projectWarpLength ?? null,
+                    notes: ""
+                    }))
+                });
+                
+                }}
+                >
+                ✓
+                </button>
+            </p>
+            <label>
+                Kors (gäller alla kedjor)<br />
+                <select
+                    className="opt"
+                    {...register("sharedCrossCount")}
+                    defaultValue="1x1"
+                >
+                    {Array.from({ length: 20 }, (_, i) => {
+                    const value = `${i + 1}x${i + 1}`;
+                    return (
+                        <option key={value} value={value}>
+                        {value}
+                        </option>
+                    );
+                    })}
+                </select>
+                </label>
 
         <div>
-             {Array.from({ length: chainCount }).map((_, index) => (
+        {Array.from({ length: chainCount }).map((_, index) => (
         <div className="chainCount" key={index}>
           <p>
             <strong>{index + 1}:{" "} </strong>
             <input
-              type="text"
+            //   type="number"
               className="optHalf"
               name={`chain-${index + 1}`}
               id={`chain-${index + 1}`}
-              {...register(`warpChains.${index}.ends`, {required:true})}
+              {...register(`warpChains.${index}.ends`, {required:true, valueAsNumber:true})}
             />
           </p>
         </div>
@@ -74,47 +108,13 @@ export default function CreateWarpChain({projectId,
         </div>
 
             {chainFields.map((chain, index) => (
-                <div key={chain.id} className="printHidden">
-                <label> Kors: (1×1 - 20×20)<br />
-                    <select className="opt"
-                        {...register(`warpChains.${index}.crossCount`)}
-                    >
-                        {Array.from({ length: 20 }, (_, i) => {
-                        const value = `${i + 1}x${i + 1}`;
-                        return (
-                            <option key={value} value={value}>
-                            {value}
-                            </option>
-                        );
-                        })}
-                    </select>
-                </label>
-{/*                 
-                <label> Varpad längd
-                    <input className="opt optHalf" placeholder={projectWarpLength} type="number" {...register(`warpChains.${index}.warpLength`, { valueAsNumber: true })} />
-                </label>
-                <label> <br />Name <br />
-                    <input className="opt optLong" {...register(`warpChains.${index}.name`)} />
-                </label>
-                <label> Anteckningar <br />
-                    <input className="opt optLong" {...register(`warpChains.${index}.notes`)} />
-                </label>
-                <button type="button" onClick={() => removeChain(index)}>Remove Chain</button>
-*/}
-                </div> 
+                <input type="hidden"
+                    {...register(`warpChains.${index}.crossCount`)}
+                    key={chain.id} />
             )
             )}
-            {/* <button type="button" onClick={() =>
-                appendChain({
-                    name: "",
-                    crossCount: null,
-                    loomProjectId: "",
-                    yarnId: "",
-                    ends: null,
-                    warpLength: null,
-                    notes: ""
-                })}>Add Warp Chain</button> */}
-            <button type="submit" disabled={!isValid}>Create Warp Chains</button>
+
+            <button className="printHidden" type="submit" disabled={!isValid}>Create Warp Chains</button>
             </form>
         </div>
     )
