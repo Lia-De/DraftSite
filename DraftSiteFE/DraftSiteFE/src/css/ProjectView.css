@@ -188,6 +188,13 @@ select.optDouble, .createForm textarea, input  {
     margin-top: 0.5rem;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
+.btnUpdateMeta {
+color: white;
+border: 1px dotted #ccc;
+border-radius: 6px;
+padding: 0.1rem;
+margin: 0 0.5rem;
+}
 #updateMetrics {
     grid-column: 1 / span 4;
     display: grid;
