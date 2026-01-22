@@ -221,5 +221,107 @@ namespace DraftSiteBE.Controllers
 
             return Ok(updated);
         }
+
+        // PATCH api/projects/status
+        // Change only the status of a project. Request: { projectId: GUID, status: int }
+        [HttpPatch("status")]
+        public async Task<IActionResult> UpdateStatus([FromBody] UpdateProjectStatusDto dto)
+        {
+            if (dto == null) return BadRequest("Request body required.");
+            if (dto.ProjectId == Guid.Empty) return BadRequest("ProjectId is required.");
+
+            if (!Enum.IsDefined(typeof(ProjectStatus), dto.Status))
+            {
+                return BadRequest("Invalid status value.");
+            }
+
+            var project = await _db.LoomProjects.FirstOrDefaultAsync(p => p.Id == dto.ProjectId);
+            if (project == null) return NotFound($"Project {dto.ProjectId} not found.");
+
+            var newStatus = (ProjectStatus)dto.Status;
+
+            // Handle timestamp-related changes for specific statuses
+            if (newStatus == ProjectStatus.InProgress)
+            {
+                project.MarkStarted();
+            }
+            else if (newStatus == ProjectStatus.Finished)
+            {
+                project.MarkFinished();
+            }
+            else
+            {
+                // For other statuses just set and update timestamp.
+                project.Status = newStatus;
+                project.UpdateTimestamp();
+
+                // If moving away from Finished, clear FinishedAt
+                if (project.FinishedAt.HasValue && newStatus != ProjectStatus.Finished)
+                {
+                    project.FinishedAt = null;
+                }
+            }
+
+            await _db.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        // DELETE api/projects/warpchain/{id}
+        // Remove a warp chain by its Id, remove it from the parent project's collection, update the project's timestamp.
+        [HttpDelete("warpchain/{id:guid}")]
+        public async Task<IActionResult> RemoveWarpChain(Guid id)
+        {
+            if (id == Guid.Empty) return BadRequest("WarpChain id is required.");
+
+            // Try to load the project that contains the warpchain (loads the collection so we can update it in-memory)
+            WarpChain? chainToRemove = null;
+            
+            var project = await _db.LoomProjects
+                .Include(p => p.WarpChains)
+                .FirstOrDefaultAsync(p => p.WarpChains.Any(w => w.Id == id));
+
+            if (project != null)
+            {
+                // Find the chain instance tracked with the project
+                chainToRemove = project.WarpChains.FirstOrDefault(w => w.Id == id);
+
+                if (chainToRemove == null)
+                {
+                    // Shouldn't happen, but guard anyway.
+                    return NotFound($"WarpChain {id} not found.");
+                }
+
+                project.WarpChains.Remove(chainToRemove);
+                // Mark entity for deletion explicitly
+                _db.WarpChains.Remove(chainToRemove);
+
+                // Update computed state timestamp
+                project.UpdateTimestamp();
+            }
+            else
+            {
+                // No project found (chain exists but no project) — just remove the chain
+                if (chainToRemove != null)
+                {
+                    _db.WarpChains.Remove(chainToRemove);
+                }
+                else
+                {
+                    return NotFound($"WarpChain {id} not found.");
+                }
+            }
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest("Failed to remove WarpChain.");
+            }
+
+            return Ok();
+        }
     }
 }

@@ -80,7 +80,7 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
         <MetricForm
         label="Trådar"
         fieldName="inputEndsInWarp"
-        defaultValue={project.totalEndsInWarp}
+        defaultValue={project.endsInWarp}
         projectId={project.id}
         onSubmit={handleMetricSubmit}
         />

@@ -1,14 +1,15 @@
 import { useState } from "react";
 import WarpChains from "./WarpChains";
 
-export default function EndsBoxes({
+export default function WarpingEndsBoxes({
+  groupSize = 20,
   totalEnds,
   boxesPerGroup = 5,
   maxPerRow = 10,
   boxSize = 20,
 }) {
-  const warpingGroupOptions = [10, 20, 30, 40, 50];
-  const [groupSize, setGroupSize] = useState(20);
+  // const warpingGroupOptions = [10, 20, 30, 40, 50];
+  // const [groupSize, setGroupSize] = useState(20);
   if (!groupSize || groupSize <= 0) return null;
 
   const fullBoxes = Math.floor(totalEnds / groupSize);
@@ -16,7 +17,7 @@ export default function EndsBoxes({
   const remainderBoxes = remainder > 0 ? Math.floor(remainder/2) : 0;
 
   return (
-    <div className="warpingHelp">
+    
     <div className="warpingBoxesBox">
       {/* Legend */}
       <div
@@ -92,21 +93,6 @@ export default function EndsBoxes({
         ))}
       </div>
     </div>
-
-      {/* Toggle */}
-      <div className="warpingBoxesToggle" >
-        {warpingGroupOptions.map((size) => (
-          <button className={groupSize === size ?"btnWarpingToggle":"btnWarpingToggleInactive"}
-          key={size}
-          onClick={() => setGroupSize(size)}
-          >
-            {size}
-          </button>
-        ))}
-      </div>
-        <WarpChains totalEnds={totalEnds} />
-      </div>
-
   );
 }
 

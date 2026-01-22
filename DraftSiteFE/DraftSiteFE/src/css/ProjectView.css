@@ -131,6 +131,9 @@
     margin:auto 0.2rem;
     padding-left: 0.2rem;
 }
+.optComputed {
+    background-color: #f0f0f0;
+}
 select.optDouble, .createForm textarea, input  {
     font-family: Rubik, system-ui, Avenir, Helvetica, Arial, sans-serif;
     font-size: 1rem;
@@ -174,6 +177,15 @@ select.optDouble, .createForm textarea, input  {
     background: #000;
     color: #fff;
     margin-bottom: auto;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+.btnDeleteChain {
+    padding: 4px 8px;
+    border: 1px solid red;
+    background: #fff;
+    color: red;
+    cursor: pointer;
+    margin-top: 0.5rem;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 #updateMetrics {
@@ -291,4 +303,26 @@ p.italics {
     max-width: 3.5rem;
     line-height: 1.5rem;
     margin: 0 0.3rem;
+}
+
+.showNote {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #555;
+    margin-top: 0.2rem;
+}
+.hideNote {
+    display: none;
+}
+.warpChainItem {
+    margin: 0 auto;
+    max-width: 500px;
+    display: grid;
+    grid-template-columns: auto auto 80px;
+    gap: 0.5rem;
+    text-align: left;
+    padding: 0;
+}
+.warpChainItem p {
+    margin: 0;
 }

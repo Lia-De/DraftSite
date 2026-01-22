@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 
 export default function CreateWarpChain({projectId, 
@@ -18,6 +18,8 @@ export default function CreateWarpChain({projectId,
             });
     const { fields: chainFields, append: appendChain, remove: removeChain } = 
     useFieldArray({ control, name: "warpChains" });
+    const [showNote, setShowNote] = useState(null);
+    const isFormDisabled = !yarnId;
 
     useEffect(() => {
         if (!projectId || !yarnId) return;
@@ -91,12 +93,13 @@ export default function CreateWarpChain({projectId,
 
         <div>
         {Array.from({ length: chainCount }).map((_, index) => (
+        
         <div className="chainCount" key={index}>
           <p>
-            <strong>{index + 1}:{" "} </strong>
+            <button type="button" className="btnWarpingToggle printHidden" title="Visa/Dölj anteckning"
+            onClick={() => setShowNote(showNote === index ? null : index)}>{index + 1}:{" "} </button>
             <input
-            //   type="number"
-              className="optHalf"
+              className="opt optHalf"
               name={`chain-${index + 1}`}
               id={`chain-${index + 1}`}
               {...register(`warpChains.${index}.ends`, {required:true, valueAsNumber:true})}
@@ -104,6 +107,15 @@ export default function CreateWarpChain({projectId,
           </p>
         </div>
       ))}
+        {Array.from({ length: chainCount }).map((_, index) => (
+            <div key={`notes-${index}`}>
+            <label 
+                className={showNote === index ? "showNote printHidden" : "hideNote printHidden"}>
+                     Anteckning kedja {index + 1}:<br />
+                <textarea className="optFull" {...register(`warpChains.${index}.notes`)} />
+            </label>
+        </div>
+        ))}
 
         </div>
 
@@ -114,7 +126,11 @@ export default function CreateWarpChain({projectId,
             )
             )}
 
-            <button className="printHidden" type="submit" disabled={!isValid}>Create Warp Chains</button>
+            <button className="printHidden" type="submit"
+             title= {isFormDisabled ? "För att spara varpkedjor måste garn finnas" : "Skapa varpflätor"}
+             disabled={!isValid || isFormDisabled}>
+                Create Warp Chains
+            </button>
             </form>
         </div>
     )

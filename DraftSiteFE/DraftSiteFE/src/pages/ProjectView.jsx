@@ -4,15 +4,16 @@ import React, { useEffect, useState } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import { projectListAtom } from "../atoms/projectListAtom.js";
 import { RiExpandLeftFill } from "react-icons/ri";
-import EndsBoxes from "../components/WarpingEndsBoxes.jsx";
 import ProjectMeta from "../components/ProjectMeta.jsx";
 import YarnInfoShort from "../components/YarnInfoShort.jsx";
 import ShowYarnList from "../components/ShowYarnList.jsx";
 import UpdateProjectMetrics from "../components/UpdateProjectMetrics.jsx";
 import UpdateProjectInfo from "../components/UpdateProjectInfo.jsx";
 import { MdInfoOutline } from "react-icons/md";
-import { getById } from "../services/APICalls.js";
+import { deleteItem, getById } from "../services/APICalls.js";
 import { currentProjectAtom } from "../atoms/currentProjectAtom.js";
+import WarpingHelp from "../components/WarpingHelp.jsx";
+import ShowWarpChains from "../components/ShowWarpChains.jsx";
 
 export default function ProjectView() {
     const { projectId } = useParams();
@@ -38,6 +39,9 @@ export default function ProjectView() {
           
           setProject(response);
             // Fetch warp yarn details, first one with the type Warp (0)
+            
+            // console.log("Fetched project:", response);
+
             const warpYarn = response.yarns.find(
             (yarn) => yarn.usageType === 0
           );
@@ -62,6 +66,15 @@ export default function ProjectView() {
 
       } finally {
           setUiState(prevState => ({...prevState, isLoading: false}));
+      }
+    }
+    const onWarpChainDelete = async (chainId) => {
+      try {
+        const res = await deleteItem("Projects/warpchain", chainId);
+      } catch (error) {
+        console.error("Error deleting warp chain:", error);
+      } finally {
+        setUiState(prev => ({...prev, forceReload: true}));
       }
     }
 
@@ -124,30 +137,35 @@ export default function ProjectView() {
 
           <p className="col3">Åtgång varp (m)</p>
           <p>Åtgång nystan</p>
-          <p className="col3 opt">{project.totalWarpLengthMeters} </p>
-          <p className="opt">{(project?.totalWarpLengthMeters / warp?.lengthPerSkeinMeters).toFixed(2)}</p>
+          <p className="col3 opt optComputed">{project.calculatedWarpLengthMeters} </p>
+          <p className="opt optComputed">{(project?.calculatedWarpLengthMeters / warp?.lengthPerSkeinMeters).toFixed(2)}</p>
 
           
           <p className="col2"> PPC </p>
           <p>Åtgång inslag (m)</p>
           <p>Åtgång nystan</p>
           <UpdateProjectMetrics project={project} setUiState={setUiState} warp={false}/>
-          <p className="opt">{project.totalWeftLengthMeters} </p>
-          <p className="opt"> {(project?.totalWeftLengthMeters / weft?.lengthPerSkeinMeters).toFixed(2) } </p>
+          <p className="opt optComputed">{project.totalWeftLengthMeters} </p>
+          <p className="opt optComputed"> {(project?.totalWeftLengthMeters / weft?.lengthPerSkeinMeters).toFixed(2) } </p>
         </div>  
         
       </div>
       <hr />     
       <h3>Varpa - räkning</h3>
-      <EndsBoxes totalEnds={project?.totalEndsInWarp ?? 0} />
+      <WarpingHelp project={project} onChainCreated={() => setUiState(prev => ({...prev, forceReload: true}))} />
     </section>
 
     <section className="pageBreak">
+      
+
+      {project.warpChains?.length > 0 && 
+        <div className="warpChainsSaved">
+          <h3>Sparade Varpkedjor med totalt {project.warpChainEndsInWarp} trådar</h3>
+          <ShowWarpChains chains={project.warpChains} onDelete={onWarpChainDelete} />
+          </div>
+      }
       <h3>Garn i projektet</h3>
-
       <ShowYarnList yarnList={project.yarns} />
-
-
     </section>
 
     </div>

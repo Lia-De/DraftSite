@@ -2,16 +2,22 @@ import { useEffect, useState } from "react";
 import CreateWarpChain from "../components/CreateWarpChain.jsx";
 import { useAtomValue } from "jotai";
 import { currentProjectAtom } from "../atoms/currentProjectAtom.js";
+import { create } from "../services/APICalls.js";
 
-export default function WarpChains({totalEnds}) {
+export default function WarpChains({totalEnds, onChainCreated}) {
   const project = useAtomValue(currentProjectAtom);
   const [warp, setWarp] = useState(null);
   const [chainCount, setChainCount] = useState(4);
   const [idealEndsPerChain, setIdealEndsPerChain] = useState(Math.floor(totalEnds/chainCount));
 
   const createChainSubmit = async (data) => {
-    console.log("Creating warp chain with data:", data.warpChains);
-    // setUiState(prev => ({...prev, forceReload:true}));
+    try {
+      const result = await create('WarpChains', data.warpChains);
+      console.log("Warp chains created successfully:", result);
+      onChainCreated();
+    } catch (error) {
+      console.error("Error creating warp chain:", error);
+    }
   };
 
   useEffect(() => {
@@ -22,7 +28,7 @@ export default function WarpChains({totalEnds}) {
   return (
     <div className="warpChainsGrid">
       {/* User input */}
-      <h3 className="printHidden">Varpflätor</h3>
+      <h3 className="printHidden">Varpflätor {project.warpChains.length > 0 ? `(${project.warpChains.length})` : ''}</h3>
       <div className="chainControl">
         <label>
           Antal kedjor: <input
@@ -38,7 +44,6 @@ export default function WarpChains({totalEnds}) {
           /> 
         </label>
       </div>
-        {/* {chainCount>1 && <p>Idealt {idealEndsPerChain} trådar på {chainCount} kedjor</p>} */}
         
         <CreateWarpChain 
           projectId={project?.id} 
@@ -48,20 +53,6 @@ export default function WarpChains({totalEnds}) {
           chainCount={chainCount}
           onSubmit={createChainSubmit} />
           
-
-      {/* Generated chains */}
-      {/* {Array.from({ length: chainCount }).map((_, index) => (
-        <div className="chainCount" key={index}>
-          <p>
-            <strong>{index + 1}:{" "} </strong>
-            <input
-              type="text"
-              name={`chain-${index + 1}`}
-              id={`chain-${index + 1}`}
-            />
-          </p>
-        </div>
-      ))} */}
     </div>
   );
 }

@@ -68,17 +68,18 @@ namespace DraftSiteBE.Models
         }
 
         // Prefer explicit chain data when present, otherwise fallback to the calculated EndsInWarp
-        public int TotalEndsInWarp => WarpChains.Count >= 1 ? WarpChains.Sum(w => w.Ends) : EndsInWarp;
+        public int WarpChainEndsInWarp => WarpChains.Count >= 1 ? WarpChains.Sum(w => w.Ends) : EndsInWarp;
+        public int CalculatedWarpLengthMeters => EndsInWarp * (int)Math.Ceiling(WarpLengthMeters);
 
         // Projected yarn usages
-        public int ProjectedTotalWarpLengthMeters => (int)Math.Ceiling(TotalEndsInWarp * WarpLengthMeters);
-        public decimal ProjectedTotalWarpWeightGrams
+        public int WarpChainTotalWarpLengthMeters => (int)Math.Ceiling(WarpChainEndsInWarp * WarpLengthMeters);
+        public decimal WarpChainTotalWarpWeightGrams
         {
             get
             {
                 // total warp weight = (total ends in warp * warp length (m)) / 1000 * yarn linear density (g/m)
                 var totalWeight = 0.0m;
-                var totalEnds = TotalEndsInWarp;
+                var totalEnds = WarpChainEndsInWarp;
                 if (totalEnds > 0 && WarpLengthMeters > 0)
                 {
                     var warpYarns = Yarns.Where(y => y.UsageType == YarnUsageType.Warp);
@@ -93,8 +94,6 @@ namespace DraftSiteBE.Models
             }
         }
 
-        public double TotalWarpLengthMeters => WarpChains.Count >=1 ? WarpChains.Sum(w => w.TotalLengthMeters) :
-            TotalEndsInWarp * WarpLengthMeters;
         public double TotalWeftLengthMeters
         {
             get
@@ -108,7 +107,7 @@ namespace DraftSiteBE.Models
             }
         }
 
-        public decimal TotalWarpSkeinsNeeded => WarpChains.Sum(w => w.SkeinsNeeded);
+        public decimal TotalWarpSkeins => WarpChains.Sum(w => w.SkeinsNeeded);
 
         // incorrect
         public decimal? TotalYarnWeightGrams => Yarns.Sum(y => y.TotalWeightGrams);
