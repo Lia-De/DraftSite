@@ -131,7 +131,7 @@ export default function ProjectView() {
 
   return (
     <div>
-    <h1 className="headerfontBold">
+    <h1 className="headerfontBold printHidden">
         Lias <img src={logo} alt="logo" height="36px" /> Vävnota
     </h1>
       <Link to="/" className="printHidden"><RiExpandLeftFill /> Tillbaka </Link>
