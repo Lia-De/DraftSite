@@ -14,6 +14,8 @@ import { deleteItem, getById, update } from "../services/APICalls.js";
 import { currentProjectAtom } from "../atoms/currentProjectAtom.js";
 import WarpingHelp from "../components/WarpingHelp.jsx";
 import ShowWarpChains from "../components/ShowWarpChains.jsx";
+import YarnEditing from "../components/YarnEditing.jsx";
+import { GrEdit } from "react-icons/gr";
 
 export default function ProjectView() {
     const { projectId } = useParams();
@@ -28,6 +30,7 @@ export default function ProjectView() {
         showMeta: false,
         forceReload: false,
         warpAsWeft: false,
+        yarnEditing: false,
     });
     
     const projectList = useAtomValue(projectListAtom);
@@ -84,9 +87,12 @@ export default function ProjectView() {
         console.error('error updating status', error)
       } finally {
         setUiState(prev => ({...prev, forceReload: true}))
-      }
+      } 
+    }
+    const onYarnChanges = (editedYarn) => {
+      console.log('yarn changed to send: ', editedYarn)
+      setUiState(prev => ({...prev, forceReload: true}))
 
-      
     }
 
     useEffect(() => {
@@ -111,7 +117,6 @@ export default function ProjectView() {
       ? <p>{uiState.loadingError} <Link to="/"><RiExpandLeftFill /> Tillbaka till framsidan</Link></p> 
       : <p>Laddar projekt... {uiState.loadingError}</p>);
 
-
   return (
     <div>
       <Link to="/" className="printHidden"><RiExpandLeftFill /> Tillbaka </Link>
@@ -125,17 +130,35 @@ export default function ProjectView() {
       
       <ProjectMeta project={project} showMeta={uiState.showMeta} setUiState={setUiState} onChange={onUpdateStatus}/>     
 
+      {uiState.yarnEditing &&
+        <YarnEditing 
+          yarn={warp} 
+          hide={()=> setUiState(prev => ({...prev, yarnEditing: false}))}
+          onChange={onYarnChanges} 
+        />}
+
+      {!uiState.yarnEditing &&
+      <>
       <div className="yarnMetricsWarp">
-        <h2>Varpgarn</h2>
-      <YarnInfoShort yarn={warp} />
-      </div>
+        <h2>Varpgarn 
+          <button className="submitBtn printHidden" onClick={() => 
+            setUiState(prev => ({...prev, yarnEditing: true}))} >
+                <GrEdit />
+          </button>
+        </h2>
       
+       <YarnInfoShort yarn={warp} />
+
+      </div>
+
       <div className="yarnMetricsWeft">
         <h2>Inslagsgarn {uiState.warpAsWeft && 
           (<MdInfoOutline className="icon" title="Varpgarn används även som inslag" />)}
         </h2>
-        <YarnInfoShort yarn={weft} warpAsWeft={uiState.warpAsWeft} />
+      <YarnInfoShort yarn={weft} warpAsWeft={uiState.warpAsWeft} />
       </div>
+      </>
+      }
 
       <div className="yarnCalculations">
 

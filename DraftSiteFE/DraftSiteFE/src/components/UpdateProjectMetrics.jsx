@@ -7,7 +7,11 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
     function MetricForm({ label, fieldName, defaultValue, projectId, onSubmit }) {
         const { register, handleSubmit, reset, watch, formState: { errors, isDirty }} = 
             useForm({ defaultValues: { [fieldName]: defaultValue } });
-        const submit = (data) => {
+
+    const integerFields = ["inputEndsInWarp", "picksPerCm", "endsPerCm"]; // example names
+    const isIntegerField = integerFields.includes(fieldName);
+
+    const submit = (data) => {
             onSubmit({
                 projectId,
                 [fieldName]: data[fieldName],
@@ -20,8 +24,10 @@ export default function UpdateProjectMetrics ({project, setUiState, warp}) {
             <form onSubmit={handleSubmit(submit)}>
                 <input
                     type="number"
+                    step={isIntegerField ? '1': "0.1"}
                     className="updateInput opt"
-                    {...register(fieldName, {min: {value: 1, message: "Måste vara positivt"}})}
+                    {...register(fieldName, {min: {value: isIntegerField ? 1: 0.1, message: "Måste vara positivt"}
+                    })}
                 />
                 <button type="submit" className="submitBtn printHidden"  disabled={!isDirty}>
                     <GrEdit />

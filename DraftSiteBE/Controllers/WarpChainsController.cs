@@ -51,7 +51,7 @@ namespace DraftSiteBE.Controllers
             var projectIds = dtos.Select(d => d.LoomProjectId).Distinct().ToList();
             var existingProjectIds = await _db.LoomProjects.Where(p => projectIds.Contains(p.Id)).Select(p => p.Id).ToListAsync();
             var missingProjects = projectIds.Except(existingProjectIds).ToList();
-            if (missingProjects.Count > 0) 
+            if (missingProjects.Count > 0)
                 return BadRequest($"The following LoomProject Ids do not exist: {string.Join(", ", missingProjects)}");
 
             // Validate yarns in batch (treat Guid.Empty as "not provided")
@@ -60,7 +60,7 @@ namespace DraftSiteBE.Controllers
             {
                 var existingYarnIds = await _db.Yarns.Where(y => yarnIds.Contains(y.Id)).Select(y => y.Id).ToListAsync();
                 var missingYarns = yarnIds.Except(existingYarnIds).ToList();
-                if (missingYarns.Count > 0) 
+                if (missingYarns.Count > 0)
                     return BadRequest($"The following Yarn Ids do not exist: {string.Join(", ", missingYarns)}");
             }
 
@@ -96,6 +96,16 @@ namespace DraftSiteBE.Controllers
                 };
 
                 toCreate.Add(chain);
+            }
+
+            // Ensure projects are marked as started (active) if not already
+            var projectsToUpdate = await _db.LoomProjects.Where(p => projectIds.Contains(p.Id)).ToListAsync();
+            foreach (var proj in projectsToUpdate)
+            {
+                if (proj.Status != ProjectStatus.InProgress)
+                {
+                    proj.MarkStarted();
+                }
             }
 
             _db.WarpChains.AddRange(toCreate);

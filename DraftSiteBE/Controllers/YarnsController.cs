@@ -76,7 +76,7 @@ namespace DraftSiteBE.Controllers
         public async Task<IActionResult> Update( [FromBody] YarnUpdateDto dto)
         {
             if (dto == null) return BadRequest("Request body is required.");
-            if (dto.Id != Guid.Empty) return BadRequest("Id in body must exist.");
+            if (dto.Id == Guid.Empty) return BadRequest("Id in body must exist.");
             Guid? incomingProjectId = dto.LoomProjectId;
             if (!incomingProjectId.HasValue)
             {

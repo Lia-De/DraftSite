@@ -333,3 +333,11 @@ p.italics {
 .warpChainItem p {
     margin: 0;
 }
+h2 > button {
+    border: 1px solid #ccc;
+}
+.yarnEditingContainer {
+    grid-column: span 3;
+    border: 1px dotted #646cffaa;
+    margin: 1rem;
+}

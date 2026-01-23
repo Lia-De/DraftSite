@@ -236,10 +236,10 @@ export default function LoomProjectForm({ onSubmit }) {
             <h2>Varputräkning</h2>
 
           <label className="col1">* Vävbredd (cm)
-            <input className={`opt ${styles.opt}`} type="number" 
+            <input className={`opt ${styles.opt}`} type="number" step="0.1"
             {...register("weavingWidthCm", { valueAsNumber: true,
               required: "Vävbredd är obligatoriskt",
-              min: { value: 1, message: "Vävbredd måste vara större än 0" }
+              min: { value: 0.1, message: "Vävbredd måste vara större än 0" }
              })} />
             {errors.weavingWidthCm && (
               <p className="error"> {errors.weavingWidthCm.message} </p>
@@ -255,9 +255,10 @@ export default function LoomProjectForm({ onSubmit }) {
            )}
            </label>
            <label>* Längd (m) <br />
-            <input className={`opt ${styles.opt}`} type="number" {...register("warpLengthMeters", { valueAsNumber: true,
+            <input className={`opt ${styles.opt}`} type="number" step="0.1"
+              {...register("warpLengthMeters", { valueAsNumber: true,
               required: "Längd är obligatoriskt",
-              min: { value: 1, message: "Längd måste vara större än 0" }
+              min: { value: 0.1, message: "Längd måste vara större än 0" }
             })} />
           {errors.warpLengthMeters && (
             <p className="error col3"> {errors.warpLengthMeters.message} </p>
