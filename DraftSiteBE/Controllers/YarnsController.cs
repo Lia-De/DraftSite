@@ -34,39 +34,64 @@ namespace DraftSiteBE.Controllers
         }
 
         // POST api/yarns
+        // Now accepts YarnUpdateDto and requires a LoomProjectId (must not be Guid.Empty)
         [HttpPost]
-        public async Task<ActionResult<Yarn>> Create([FromBody] Yarn yarn)
+        public async Task<ActionResult<Yarn>> Create([FromBody] YarnUpdateDto dto)
         {
-            if (yarn == null) return BadRequest("Request body is required.");
+            if (dto == null) return BadRequest("Request body is required.");
+            if (dto.LoomProjectId == Guid.Empty) return BadRequest("LoomProjectId must be provided and non-empty.");
 
             var validation = await _validationService.GetAsync();
 
             var errors = new List<string>();
-            if (yarn.LengthPerSkeinMeters <= 0) errors.Add("LengthPerSkeinMeters must be > 0.");
-            if (yarn.WeightPerSkeinGrams <= 0) errors.Add("WeightPerSkeinGrams must be > 0.");
-            if (yarn.NumberOfSkeins < 0) errors.Add("NumberOfSkeins must be >= 0.");
+            if (!dto.LengthPerSkeinMeters.HasValue || dto.LengthPerSkeinMeters.Value <= 0) errors.Add("LengthPerSkeinMeters must be > 0.");
+            if (!dto.WeightPerSkeinGrams.HasValue || dto.WeightPerSkeinGrams.Value <= 0) errors.Add("WeightPerSkeinGrams must be > 0.");
+            if (dto.NumberOfSkeins.HasValue && dto.NumberOfSkeins.Value < 0) errors.Add("NumberOfSkeins must be >= 0.");
 
-            if (yarn.Ply.HasValue && (yarn.Ply < validation.PlyMin || yarn.Ply > validation.PlyMax))
+            if (dto.Ply.HasValue && (dto.Ply < validation.PlyMin || dto.Ply > validation.PlyMax))
                 errors.Add($"Ply must be between {validation.PlyMin} and {validation.PlyMax} if specified.");
 
-            if (yarn.ThicknessNM.HasValue && (yarn.ThicknessNM < validation.ThicknessMin || yarn.ThicknessNM > validation.ThicknessMax))
+            if (dto.ThicknessNM.HasValue && (dto.ThicknessNM < validation.ThicknessMin || dto.ThicknessNM > validation.ThicknessMax))
                 errors.Add($"ThicknessNM must be between {validation.ThicknessMin} and {validation.ThicknessMax} if specified.");
 
             if (errors.Count > 0) return BadRequest(new { Errors = errors });
 
-            if (yarn.Id == Guid.Empty) yarn.Id = Guid.NewGuid();
+            // Ensure the LoomProject exists
+            var projectExists = await _db.LoomProjects.AnyAsync(p => p.Id == dto.LoomProjectId);
+            if (!projectExists) return BadRequest($"LoomProject {dto.LoomProjectId} does not exist.");
 
-            // If assigned to a project, ensure project exists
-            if (yarn.LoomProjectId.HasValue)
+            // Map DTO to Yarn entity (use provided Id if present, otherwise preserve the DTO-generated one)
+            var yarn = new Yarn
             {
-                var projectExists = await _db.LoomProjects.AnyAsync(p => p.Id == yarn.LoomProjectId.Value);
-                if (!projectExists) return BadRequest($"LoomProject {yarn.LoomProjectId} does not exist.");
-            }
+                Id = dto.Id == Guid.Empty ? Guid.NewGuid() : dto.Id,
+                LoomProjectId = dto.LoomProjectId,
+                UsageType = dto.UsageType ?? YarnUsageType.Warp,
+                Brand = dto.Brand,
+                Color = dto.Color,
+                ColorCode = dto.ColorCode,
+                DyeLot = dto.DyeLot,
+                FibreType = dto.FibreType ?? YarnFibreType.Wool,
+                Ply = dto.Ply,
+                ThicknessNM = dto.ThicknessNM,
+                Notes = dto.Notes,
+                WeightPerSkeinGrams = dto.WeightPerSkeinGrams!.Value,
+                LengthPerSkeinMeters = dto.LengthPerSkeinMeters!.Value,
+                NumberOfSkeins = dto.NumberOfSkeins,
+                PricePerSkein = dto.PricePerSkein
+            };
 
             _db.Yarns.Add(yarn);
+
+            // Update project's LastUpdated timestamp to reflect the new yarn
+            var proj = await _db.LoomProjects.FindAsync(dto.LoomProjectId);
+            if (proj != null)
+            {
+                proj.UpdateTimestamp();
+            }
+
             await _db.SaveChangesAsync();
 
-            // Use CreatedAtAction so the framework resolves the action in this controller
+            // Return created resource
             return CreatedAtAction(nameof(GetById), new { id = yarn.Id }, yarn);
         }
 

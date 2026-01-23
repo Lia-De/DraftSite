@@ -1,5 +1,6 @@
 import "../css/ProjectView.css";
 import { Link, useParams } from "react-router";
+import logo from '../assets/weave-svgrepo-com.svg';
 import React, { useEffect, useState } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import { projectListAtom } from "../atoms/projectListAtom.js";
@@ -16,6 +17,8 @@ import WarpingHelp from "../components/WarpingHelp.jsx";
 import ShowWarpChains from "../components/ShowWarpChains.jsx";
 import YarnEditing from "../components/YarnEditing.jsx";
 import { GrEdit } from "react-icons/gr";
+import AddNewYarn from "../components/AddNewYarn.jsx";
+import { MdAddCircleOutline } from "react-icons/md";
 
 export default function ProjectView() {
     const { projectId } = useParams();
@@ -31,6 +34,8 @@ export default function ProjectView() {
         forceReload: false,
         warpAsWeft: false,
         yarnEditing: false,
+        addYarn: false,
+        yarnToEdit: null
     });
     
     const projectList = useAtomValue(projectListAtom);
@@ -42,9 +47,6 @@ export default function ProjectView() {
           
           setProject(response);
             // Fetch warp yarn details, first one with the type Warp (0)
-            
-            // console.log("Fetched project:", response);
-
             const warpYarn = response.yarns.find(
             (yarn) => yarn.usageType === 0
           );
@@ -84,21 +86,25 @@ export default function ProjectView() {
       try {
       const res = await update('projects/status', {projectId: project.id, status: newStatus})
       } catch (error) {
-        console.error('error updating status', error)
+        console.error('error updating status: ', error)
       } finally {
         setUiState(prev => ({...prev, forceReload: true}))
       } 
     }
     const onYarnChanges = async (editedYarn) => {
-      console.log('yarn changed to send: ', editedYarn)
       try {
         const res = await update('Yarns', editedYarn);
       }
       catch (error) {
-        console.log('meep', res)
+        console.log('onYarnChanges error: ', res)
       } finally {
         setUiState(prev => ({...prev, forceReload: true}))
       }
+    }
+    const onYarnAdded = (newYarn) => {
+      console.log('add new yarn:', newYarn)
+      setUiState(prev => ({...prev, addYarn: false}))
+      setUiState(prev => ({...prev, forceReload: false}))
     }
 
     useEffect(() => {
@@ -125,6 +131,9 @@ export default function ProjectView() {
 
   return (
     <div>
+    <h1 className="headerfontBold">
+        Lias <img src={logo} alt="logo" height="36px" /> Vävnota
+    </h1>
       <Link to="/" className="printHidden"><RiExpandLeftFill /> Tillbaka </Link>
 
 
@@ -138,7 +147,7 @@ export default function ProjectView() {
 
       {uiState.yarnEditing &&
         <YarnEditing 
-          yarn={warp} 
+          yarn={uiState.yarnToEdit} 
           hide={()=> setUiState(prev => ({...prev, yarnEditing: false}))}
           onChange={onYarnChanges} 
         />}
@@ -148,7 +157,7 @@ export default function ProjectView() {
       <div className="yarnMetricsWarp">
         <h2>Varpgarn 
           <button className="submitBtn printHidden" onClick={() => 
-            setUiState(prev => ({...prev, yarnEditing: true}))} >
+            setUiState(prev => ({...prev, yarnEditing: true, yarnToEdit: warp}))} >
                 <GrEdit />
           </button>
         </h2>
@@ -158,10 +167,14 @@ export default function ProjectView() {
       </div>
 
       <div className="yarnMetricsWeft">
-        <h2>Inslagsgarn {uiState.warpAsWeft && 
-          (<MdInfoOutline className="icon" title="Varpgarn används även som inslag" />)}
+        <h2>Inslagsgarn {uiState.warpAsWeft ? 
+          (<MdInfoOutline className="icon" title="Varpgarn används även som inslag" />) 
+          : <button className="submitBtn printHidden" onClick={() => 
+            setUiState(prev => ({...prev, yarnEditing: true, yarnToEdit: weft}))} >
+                <GrEdit />
+          </button>}
         </h2>
-      <YarnInfoShort yarn={weft} warpAsWeft={uiState.warpAsWeft} />
+        <YarnInfoShort yarn={weft} warpAsWeft={uiState.warpAsWeft} />
       </div>
       </>
       }
@@ -197,7 +210,6 @@ export default function ProjectView() {
 
     <section className="pageBreak">
       
-
       {project.warpChains?.length > 0 && 
         <div className="warpChainsSaved">
           <h3>Sparade Varpkedjor med totalt {project.warpChainEndsInWarp} trådar</h3>
@@ -206,6 +218,13 @@ export default function ProjectView() {
       }
       <h3>Garn i projektet</h3>
       <ShowYarnList yarnList={project.yarns} />
+      
+      {!uiState.addYarn ? (
+      <button className="col2" onClick={ () => 
+      setUiState(prev => ({...prev, addYarn: true})) }>
+        <MdAddCircleOutline  /> Nytt garn
+      </button>
+      ) : <AddNewYarn onSubmit={onYarnAdded} projectId={projectId} />}
     </section>
 
     </div>

@@ -113,13 +113,13 @@ return (
             Lias <img src={logo} alt="logo" height="36px" /> Vävnota
             </h1>
         {uiState.loadingError && <p style={{color: 'red'}}>Error: {uiState.loadingError}</p>}
-
         <section>
             <button onClick={() => onFetchRequest("Projects")}>
                 Hämta projekt 
                 {': ' + uiState.projectCount} 
                 {uiState.isLoading && fetchCategory==="Projects" ? <RxUpdate className="icon"  /> : ""}
             </button>
+{/* 
             <button onClick={() => onFetchRequest("Yarns") }>
                 Hämta garn 
                 {': ' + uiState.yarnCount} 
@@ -129,7 +129,8 @@ return (
                 Varpflätor 
                 {': ' + uiState.warpChainCount} 
                 {uiState.isLoading && fetchCategory==="WarpChains" ? <RxUpdate className="icon"  /> : ""}
-            </button>
+            </button> 
+*/}
         </section>
  
  {/* Buttons to select expanded information */}

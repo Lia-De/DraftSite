@@ -4,6 +4,7 @@ import { defaultYarn, USAGE_TYPES, FIBRE_TYPES } from "../constants/yarnConstant
 import { MdPlaylistRemove } from "react-icons/md";
 import { MdAddCircleOutline } from "react-icons/md";
 import styles from "./LoomProjectForm.module.css";
+import YarnForm from "./YarnForm";
 
 export default function LoomProjectForm({ onSubmit }) {
   const { register, control, watch, handleSubmit, formState: { errors, isValid } } = useForm({mode:"onChange",
@@ -84,7 +85,6 @@ export default function LoomProjectForm({ onSubmit }) {
     return (
     <form className={styles.createForm} onSubmit={handleSubmit(onSubmit)}>
      <section id="projectDetail">
-
       <label className="span2">
         <h2>Projektnamn</h2>
         <input className={styles.optLong} 
@@ -101,129 +101,19 @@ export default function LoomProjectForm({ onSubmit }) {
   </label>
 
       <div className={styles.yarnMetricsWarp}>
+    
         <h2>Garn</h2>
-        
-    {yarnFields.map((yarn, index) => (
-      <div key={yarn.id} className={styles.yarnEntry}>
-        <label className="span3">
-          Märke: 
-          <input className={styles.optLong} {...register(`yarns.${index}.brand`)} />
-        </label>
-        <label>
-          * Nm (tjocklek/trådar) <br />
-          <input className={styles.optHalf} type="number" 
-          {...register(`yarns.${index}.thicknessNM`, { valueAsNumber: true ,
-            required: "Tjocklek (Nm) är obligatoriskt",
-            min: { value: 1, message: "Tjocklek måste vara större än 0" }
-            })} />
-          /<input className={styles.optHalf} type="number" 
-          {...register(`yarns.${index}.ply`, { valueAsNumber: true ,
-            required: "Trådantal (Nm) är obligatoriskt",
-            min: { value: 1, message: "Trådar måste vara större än 0" }
-          })} />
-        {/* Error messages */}
-        {errors?.yarns?.[index]?.thicknessNM && (
-          <p className="error"> {errors.yarns[index].thicknessNM.message}</p>
-        )}
-        {errors?.yarns?.[index]?.ply && (
-          <p className="error">{errors.yarns[index].ply.message}</p>
-        )}
-        </label>
-        <label>
-          Färg <br />
-          <input className={`opt ${styles.opt}`}{...register(`yarns.${index}.color`)} />
-        </label>
-        <label>
-          Färgkod <br />
-          <input className={`opt ${styles.opt}`} {...register(`yarns.${index}.colorCode`)} />
-        </label>
-        <span className={styles.yarnEntry}>
-        <h4>Nystan</h4>
-        <label>
-         * Vikt (g)
-          <input className={`opt ${styles.opt}`} type="number" 
-          {...register(`yarns.${index}.weightPerSkeinGrams`, { valueAsNumber: true ,
-            required: "Vikt är obligatoriskt",
-            min: { value: 1, message: "Vikt måste vara större än 0" }
-          })} />
-          {errors?.yarns?.[index]?.weightPerSkeinGrams && (
-            <p className="error">
-              {errors.yarns[index].weightPerSkeinGrams.message}
-            </p>
-          )}
-        </label>
-        <label>
-         * Längd (m)
-          <input className={`opt ${styles.opt}`} type="number" 
-          {...register(`yarns.${index}.lengthPerSkeinMeters`, { valueAsNumber: true ,
-            required: "Längd är obligatoriskt",
-            min: { value: 1, message: "Längd måste vara större än 0" }
-          })} />
-        {errors?.yarns?.[index]?.lengthPerSkeinMeters && (
-          <p className="error">
-            {errors.yarns[index].lengthPerSkeinMeters.message}
-          </p>
-        )}
-        </label>
-        <label>
-          Pris
-          <input className={`opt ${styles.opt}`} type="number" 
-            {...register(`yarns.${index}.pricePerSkein`, { valueAsNumber: true })} />
-        </label>
-          
-
-        <label className="col1">
-        Fiber:&nbsp;
-        <select className={styles.optDouble}
-            {...register(`yarns.${index}.fibreType`, {
-            valueAsNumber: true
-            })}>
-            <option value="">Välj fiber</option>
-            {FIBRE_TYPES.map(opt => (
-            <option key={opt.value} value={opt.value}>
-                {opt.label}
-            </option>
-            ))}
-        </select>
-        </label>
-        <label>
-        Syfte:&nbsp;
-        <select className={styles.optDouble}
-            {...register(`yarns.${index}.usageType`, {
-            valueAsNumber: true
-            })}
-        >
-            <option value="">Välj alternativ</option>
-            {USAGE_TYPES.map(opt => (
-            <option key={opt.value} value={opt.value}>
-                {opt.label}
-            </option>
-            ))}
-        </select>
-        </label>
-        <label>
-         * Nystan: 
-          <input className={styles.optHalf} type="number" 
-            {...register(`yarns.${index}.numberOfSkeins`, { valueAsNumber: true,
-              required: "Lägg till minst 1 nystan",
-               min: { value: 1, message: "Antal nystan måste vara 1 eller mer" }
-             })} />
-          {errors?.yarns?.[index]?.numberOfSkeins && (
-            <p className="error">
-              {errors.yarns[index].numberOfSkeins.message}
-            </p>
-          )}
-        </label>
-        </span>
-        <label className="span3">
-          Anteckning
-          <input className={styles.optLong} {...register(`yarns.${index}.notes`)} />
-        </label>
-        <button className="col2" type="button" onClick={() => removeYarn(index)}>
-          <MdPlaylistRemove style={{ color: "red" }} /> Ta bort garn
-        </button>
-      </div>
+    {yarnFields.map((_, index) => (
+      <YarnForm
+        key={yarnFields[index].id}
+        register={register}
+        errors={errors}
+        styles={styles}
+        namePrefix={`yarns.${index}`}
+        onRemove={() => removeYarn(index)}
+      />
     ))}
+
     <button className="col2" type="button" onClick={() => appendYarn({...defaultYarn})}>
       <MdAddCircleOutline  /> Lägg till garn
     </button>

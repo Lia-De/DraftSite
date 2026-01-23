@@ -341,3 +341,7 @@ h2 > button {
     border: 1px dotted #646cffaa;
     margin: 1rem;
 }
+.addYarnForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
