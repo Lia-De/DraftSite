@@ -69,8 +69,10 @@ export default function YarnEditing({yarn, hide, onChange}) {
                     <input className={`opt ${styles.opt}`}{...register("color")} />
                 </label>
                 <label>
-                    Färgkod <br />
+                    Färgkod / Färgbad <br />
                     <input className={`opt ${styles.opt}`} {...register("colorCode")} />
+                    
+                    <input className={`opt ${styles.opt}`} {...register("dyeLot")} />
                 </label>
                 <span className={styles.yarnEntry}>
                 <h4>Nystan</h4>

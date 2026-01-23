@@ -89,10 +89,16 @@ export default function ProjectView() {
         setUiState(prev => ({...prev, forceReload: true}))
       } 
     }
-    const onYarnChanges = (editedYarn) => {
+    const onYarnChanges = async (editedYarn) => {
       console.log('yarn changed to send: ', editedYarn)
-      setUiState(prev => ({...prev, forceReload: true}))
-
+      try {
+        const res = await update('Yarns', editedYarn);
+      }
+      catch (error) {
+        console.log('meep', res)
+      } finally {
+        setUiState(prev => ({...prev, forceReload: true}))
+      }
     }
 
     useEffect(() => {
