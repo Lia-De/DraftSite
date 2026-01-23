@@ -1,19 +1,54 @@
+import { useState } from "react";
 import { PROJECT_STATUS_LABELS } from "../constants/projectStatus.js";
 import { GrEdit } from "react-icons/gr";
 
-export default function ProjectMeta({project, showMeta, setUiState}) {
+export default function ProjectMeta({project, showMeta, setUiState, onChange}) {
+    const [editMode, setEditMode] = useState(false);
+    const [selectedStatus, setSelectedStatus] = useState(project.status);
+
     const formatDate = (date) =>
         date ? new Date(date).toLocaleDateString("sv-SE") : "—";
 
-    const updateStatus = (data) => {
-        console.log(data);
+    const updateStatus = () => {
+        onChange(selectedStatus);
+        console.log("Updating status to:", selectedStatus);
+        // After successful update:
+        setEditMode(false);
+    }
+
+    const handleStatusChange = (e) => {
+        setSelectedStatus(Number(e.target.value));
     }
     
     return showMeta ? (
-    <div className="projectMeta" onClick={() => setUiState(prev => ({...prev, showMeta: false}))}>
+    <div className="projectMeta">
+        <p className="error"  onClick={() => setUiState(prev => ({...prev, showMeta: false}))}>X</p>
         <p className="metaStatus">
-            Status: {PROJECT_STATUS_LABELS[project.status] ?? "Odefinerat"}
-            <GrEdit className="icon btnUpdateMeta" onClick={updateStatus}/>
+            Status: {editMode ? (
+                <select 
+                    className="opt"
+                    value={selectedStatus} 
+                    onChange={handleStatusChange}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {Object.entries(PROJECT_STATUS_LABELS).map(([key, label]) => (
+                        <option key={key} value={key}>{label}</option>
+                    ))}
+                </select>
+            ) : (
+                PROJECT_STATUS_LABELS[project.status] ?? "Odefinerat"
+            )}
+            <GrEdit 
+                className="icon btnUpdateMeta" 
+                onClick={(e) => {
+                    e.stopPropagation();
+                    if (editMode) {
+                        updateStatus();
+                    } else {
+                        setEditMode(true);
+                    }
+                }}
+            />
             </p>
         <p className="metaCreated">
             Skapat: {formatDate(project.createdAt)}</p>

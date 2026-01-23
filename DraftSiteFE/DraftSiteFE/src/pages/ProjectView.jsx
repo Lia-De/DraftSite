@@ -10,7 +10,7 @@ import ShowYarnList from "../components/ShowYarnList.jsx";
 import UpdateProjectMetrics from "../components/UpdateProjectMetrics.jsx";
 import UpdateProjectInfo from "../components/UpdateProjectInfo.jsx";
 import { MdInfoOutline } from "react-icons/md";
-import { deleteItem, getById } from "../services/APICalls.js";
+import { deleteItem, getById, update } from "../services/APICalls.js";
 import { currentProjectAtom } from "../atoms/currentProjectAtom.js";
 import WarpingHelp from "../components/WarpingHelp.jsx";
 import ShowWarpChains from "../components/ShowWarpChains.jsx";
@@ -77,6 +77,17 @@ export default function ProjectView() {
         setUiState(prev => ({...prev, forceReload: true}));
       }
     }
+    const onUpdateStatus = async (newStatus) => {
+      try {
+      const res = await update('projects/status', {projectId: project.id, status: newStatus})
+      } catch (error) {
+        console.error('error updating status', error)
+      } finally {
+        setUiState(prev => ({...prev, forceReload: true}))
+      }
+
+      
+    }
 
     useEffect(() => {
       if (uiState.forceReload == true) {
@@ -112,7 +123,7 @@ export default function ProjectView() {
       
       <UpdateProjectInfo project={project} setUiState={setUiState} description={true}/>
       
-      <ProjectMeta project={project} showMeta={uiState.showMeta} setUiState={setUiState} />     
+      <ProjectMeta project={project} showMeta={uiState.showMeta} setUiState={setUiState} onChange={onUpdateStatus}/>     
 
       <div className="yarnMetricsWarp">
         <h2>Varpgarn</h2>
